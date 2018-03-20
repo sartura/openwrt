@@ -1,0 +1,18 @@
+Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
+---
+ arch/arm/boot/dts/Makefile                      |   1 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi   |  12 +-
+ 4 files changed, 189 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -618,6 +618,7 @@
+ 	qcom-apq8084-mtp.dtb \
+ 	qcom-ipq4019-ap.dk01.1-c1.dtb \
+ 	qcom-ipq4019-ap.dk04.1-c1.dtb \
++	qcom-ipq4019-ap.jalapeno-v2.dtb \
+ 	qcom-ipq8064-ap148.dtb \
+ 	qcom-ipq8064-c2600.dtb \
+ 	qcom-ipq8064-d7800.dtb \

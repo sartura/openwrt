@@ -66,6 +66,9 @@ case "$FIRMWARE" in
 	zyxel,nbg6817)
 		ath10kcal_extract "0:ART" 4096 12064
 		;;
+	jalapeno)
+		ath10kcal_extract "ART" 4096 12064
+		;;
 	esac
 	;;
 "ath10k/pre-cal-pci-0001:01:00.0.bin")
@@ -88,6 +91,9 @@ case "$FIRMWARE" in
 		;;
 	zyxel,nbg6817)
 		ath10kcal_extract "0:ART" 20480 12064
+		;;
+	jalapeno)
+		ath10kcal_extract "ART" 20480 12064
 		;;
 	esac
 	;;

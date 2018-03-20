@@ -3,6 +3,26 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/image.mk
 
+UBIFS_OPTS = -m 2048 -e 124KiB -c 4096 -U -F
+
+define Image/Prepare
+	$(CP) $(LINUX_DIR)/vmlinux $(KDIR)/$(IMG_PREFIX)-vmlinux.elf
+endef
+
+define Image/BuildKernel
+	$(CP) $(KDIR)/$(IMG_PREFIX)-vmlinux.elf $(BIN_DIR)
+endef
+
+define Image/Build/squashfs
+	cp $(KDIR)/root.squashfs $(KDIR)/root.squashfs-raw
+	$(call prepare_generic_squashfs,$(KDIR)/root.squashfs)
+endef
+
+define Image/Build
+	$(call Image/Build/$(1),$(1))
+	dd if=$(KDIR)/root.$(1) of=$(BIN_DIR)/$(IMG_PREFIX)-$(1)-root.img bs=2k conv=sync
+endef
+
 define Device/Default
 	PROFILES := Default
 	KERNEL_DEPENDS = $$(wildcard $(DTS_DIR)/$$(DEVICE_DTS).dts)
@@ -239,5 +259,19 @@ define Device/zyxel_nbg6817
 	$(call Device/ZyXELImage)
 endef
 TARGET_DEVICES += zyxel_nbg6817
+
+define Device/jalapeno
+	$(call Device/FitImage)
+	$(call Device/UbiFit)
+	DEVICE_DTS := qcom-ipq4019-ap.jalapeno-v2
+	KERNEL_LOADADDR := 0x80208000
+	KERNEL_INSTALL := 1
+	KERNEL_SIZE := 4048k
+	BLOCKSIZE := 128k
+	PAGESIZE := 2048
+	BOARD_NAME := jalapeno
+	DEVICE_TITLE := 8devices Jalapeno
+endef
+TARGET_DEVICES += jalapeno
 
 $(eval $(call BuildImage))
