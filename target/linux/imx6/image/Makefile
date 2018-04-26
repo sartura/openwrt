@@ -123,4 +123,13 @@ define Device/wandboard
 endef
 TARGET_DEVICES += wandboard
 
+define Device/cubox-i
+  KERNEL := kernel-bin | install-dtb
+  DEVICE_NAME := cubox
+  DEVICE_TITLE := SolidRun CuBox-i
+  DEVICE_PACKAGES := u-boot-mx6cuboxi
+  DEVICE_DTS := imx6q-cubox-i imx6dl-cubox-i
+endef
+TARGET_DEVICES += cubox-i
+
 $(eval $(call BuildImage))

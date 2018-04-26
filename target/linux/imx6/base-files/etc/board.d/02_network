@@ -10,6 +10,9 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
+cubox-i)
+	ucidef_set_interface_lan 'eth0'
+	;;
 *gw51xx |\
 *gw52xx |\
 *gw5904)

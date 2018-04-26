@@ -1,0 +1,18 @@
+#!/bin/sh
+
+. /lib/functions/uci-defaults.sh
+
+board=$(board_name)
+
+board_config_update
+
+case "$board" in
+cubox-i)
+	# CuBox-i devices use ttymxc* console, so the inittab file needs to be adjusted accordingly.
+	[ ! "$(cat /etc/inittab | grep 'ttymxc0')" ] && sed -i 's/tty1/ttymxc0/g' /etc/inittab
+	;;
+esac
+
+board_config_flush
+
+exit 0
