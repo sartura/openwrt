@@ -1,6 +1,6 @@
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-@@ -87,7 +87,7 @@
+@@ -98,7 +98,7 @@
  
  		sw4 {
  			label = "sw4";
@@ -9,7 +9,7 @@
  			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
  		};
  	};
-@@ -203,7 +203,7 @@
+@@ -238,7 +238,7 @@
  };
  
  &usb_otg {
