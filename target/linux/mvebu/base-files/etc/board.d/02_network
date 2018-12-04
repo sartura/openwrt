@@ -46,7 +46,8 @@ armada-xp-gp)
 globalscale,espressobin)
 	ucidef_set_interfaces_lan_wan "lan0 lan1" "wan"
 	;;
-marvell,armada-3720-db)
+marvell,armada-3720-db|\
+methode,uDPU)
 	ucidef_set_interfaces_lan_wan "eth1" "eth0"
 	;;
 marvell,armada8040-mcbin)
