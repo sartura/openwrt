@@ -29,8 +29,15 @@ define U-Boot/clearfog
   UBOOT_IMAGE:=u-boot-spl.kwb
 endef
 
+define U-Boot/uDPU
+  NAME:=Methode uDPU
+  BUILD_DEVICES:=uDPU
+  UBOOT_IMAGE:=u-boot.bin
+endef
+
 UBOOT_TARGETS:= \
-	clearfog
+	clearfog \
+	uDPU
 
 Build/Exports:=$(Host/Exports)
 
