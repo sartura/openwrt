@@ -45,6 +45,9 @@ endef
 define Build/InstallDev
 	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)
 	$(CP) $(PKG_BUILD_DIR)/$(UBOOT_IMAGE) $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-u-boot-spl.kwb
+
+	# copy BL33 for the A37xx/A7K/A8K platforms
+	$(CP) $(PKG_BUILD_DIR)/$(UBOOT_IMAGE) $(STAGING_DIR)
 endef
 
 $(eval $(call BuildPackage/U-Boot))
