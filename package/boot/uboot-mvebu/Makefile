@@ -40,6 +40,9 @@ define Build/Configure
 	echo CONFIG_CMD_SETEXPR=y >> $(PKG_BUILD_DIR)/configs/$(BUILD_VARIANT)_defconfig
 
 	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) $(UBOOT_CONFIGURE_VARS) $(UBOOT_CONFIG)_config
+
+	# copy u-boot.bin to staging dir - required for exporting BL33 in the ATF-mvebu package
+	$(CP) $(PKG_BUILD_DIR)/$(UBOOT_IMAGE) $(STAGING_DIR)
 endef
 
 define Build/InstallDev
