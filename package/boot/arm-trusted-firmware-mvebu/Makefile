@@ -27,6 +27,15 @@ define Package/arm-trusted-firmware-mvebu/Default
     DEPENDS:=@TARGET_mvebu
 endef
 
+define Package/arm-trusted-firmware-uDPU
+    $(call Package/arm-trusted-firmware-mvebu/Default)
+    BOARDNAME:=uDPU
+    TITLE:=ARM Trusted Firmware for the uDPU board
+    DEPENDS+=+u-boot-uDPU
+    CLOCKSPRESET:=CPU_1000_DDR_800
+    PLAT:=a3700
+endef
+
 PKG_A3700_UTILS_NAME:=a3700-utils
 PKG_A3700_UTILS_RELEASE:=17.10.5
 PKG_A3700_UTILS_SOURCE:=$(PKG_A3700_UTILS_NAME)-$(PKG_A3700_UTILS_RELEASE).tar.bz2
@@ -82,3 +91,4 @@ endef
 
 $(eval $(call Download,a3700-utils))
 $(eval $(call Download,gcc-linaro))
+$(eval $(call BuildPackage,arm-trusted-firmware-uDPU))
