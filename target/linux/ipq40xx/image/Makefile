@@ -137,6 +137,14 @@ define Device/glinet_gl-b1300
 endef
 TARGET_DEVICES += glinet_gl-b1300
 
+define Device/ignitenet_ml-5-lw
+	$(call Device/FitImage)
+	DEVICE_TITLE := IgniteNet MetroLinq 5 LW
+	BOARD_NAME := ml-5-lw
+	DEVICE_DTS := qcom-ml5lw
+endef
+TARGET_DEVICES += ignitenet_ml-5-lw
+
 define Device/linksys_ea6350v3
 	# The Linksys EA6350v3 has a uboot bootloader that does not
 	# support either booting lzma kernel images nor booting UBI

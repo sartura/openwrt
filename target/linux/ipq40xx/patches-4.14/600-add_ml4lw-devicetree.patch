@@ -1,0 +1,10 @@
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -714,6 +714,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-ipq4029-gl-b1300.dtb \
+ 	qcom-ipq4029-mr33.dtb \
+ 	qcom-ipq8064-ap148.dtb \
++	qcom-ml5lw.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
+ 	qcom-msm8974-lge-nexus5-hammerhead.dtb \
