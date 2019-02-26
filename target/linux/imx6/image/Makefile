@@ -113,6 +113,29 @@ define Build/apalis-emmc
 	$(Build/imx6-combined-image-clean)
 endef
 
+define Build/colibri-bootfs
+	mkdir -p {$@.firmware,$@.bootfs}
+	$(CP) $(IMAGE_KERNEL) $@.bootfs/uImage
+	$(foreach dts,$(DEVICE_DTS), $(CP) $(DTS_DIR)/$(dts).dtb $@.bootfs;)
+
+	# Tar rootfs and bootfs
+	$(TAR) -C $@.bootfs -cvpJf $@.firmware/$(IMAGE_NAME).bootfs.tar.xz ./
+	$(TAR) -C $(TARGET_DIR) -cvpJf $@.firmware/$(IMAGE_NAME).rootfs.tar.xz ./
+
+	# Copy local files (prepare.sh,wrapup.sh)
+	$(CP) ./colibri/* $@.firmware
+
+	# Generate image.json
+	./gen_colibri_config.sh $(IMAGE_NAME) > $@.firmware/image.json
+
+	# Copy u-boot and SPL into firmware dir
+	$(CP) $(BIN_DIR)/u-boot*/* $@.firmware
+
+	# Create image_list.json, required for local server
+	echo -e '{\n\t"config_format": 1,\n\t"images": ["image.json"]\n}' > $@.firmware/image_list.json
+	$(TAR) -C $@.firmware -cvf $(BIN_DIR)/$(IMAGE_NAME).firmware.tar ./
+endef
+
 #################################################
 # Devices
 #################################################
@@ -222,5 +245,23 @@ define Device/apalis
   ARTIFACT/recovery.scr := recovery-scr
 endef
 TARGET_DEVICES += apalis
+
+define Device/colibri
+  DEVICE_TITLE := Toradex Colibri family
+  SUPPORTED_DEVICES := aster
+  DEVICE_DTS := imx6dl-colibri-eval-v3
+  IMAGE_NAME = $$(IMAGE_PREFIX)-Image
+  DEVICE_PACKAGES := \
+	kmod-can kmod-can-flexcan kmod-can-raw \
+	kmod-leds-gpio kmod-gpio-button-hotplug \
+	kmod-pps-gpio kmod-rtc-ds1307 kmod-usb2 \
+	kmod-usb-storage kmod-usb-hid kmod-fs-ext4 \
+	kmod-fs-ntfs kmod-fs-vfat kmod-drm-imx \
+	kmod-drm-imx-ldb u-boot-colibri_imx6
+  IMAGES:= Image.tar
+  IMAGE/Image.tar := colibri-bootfs
+  UBOOT := colibri_imx6
+endef
+TARGET_DEVICES += colibri
 
 $(eval $(call BuildImage))

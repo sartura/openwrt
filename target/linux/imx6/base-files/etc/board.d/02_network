@@ -21,6 +21,7 @@ cubox-i |\
 *gw552x)
 	ucidef_set_interfaces_lan_wan 'eth0' 'eth1'
 	;;
+colibri* |\
 *wandboard)
 	ucidef_set_interface_wan 'eth0'
 	;;

@@ -94,6 +94,9 @@ imx6_board_detect() {
 	"Toradex Apalis iMX6Q/D Module on Apalis Evaluation Board")
 		name="apalis,eval"
 		;;
+	"Toradex Colibri iMX6DL/S on Colibri Evaluation Board V3")
+		name="colibri,eval"
+		;;
 
 	"Wandboard i.MX6 Dual Lite Board")
 		name="wandboard"
