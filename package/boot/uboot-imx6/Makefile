@@ -26,6 +26,12 @@ define U-Boot/apalis_imx6
   UBOOT_MAKE_FLAGS:=SPL u-boot.img u-boot-with-spl.imx
 endef
 
+define U-Boot/colibri_imx6
+  NAME:=Toradex Colibri iMX6DL
+  UBOOT_IMAGE:=SPL u-boot.img
+  UBOOT_MAKE_FLAGS:=SPL u-boot.img
+endef
+
 define U-Boot/mx6cuboxi
    NAME:=SolidRun Cubox-i boards
    UBOOT_IMAGE:=SPL u-boot.img
@@ -69,6 +75,7 @@ endef
 
 UBOOT_TARGETS := \
 	apalis_imx6 \
+	colibri_imx6 \
 	mx6cuboxi \
 	mx6sabresd \
 	nitrogen6dl \
