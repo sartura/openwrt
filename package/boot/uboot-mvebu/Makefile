@@ -29,8 +29,16 @@ define U-Boot/clearfog
   UBOOT_IMAGE:=u-boot-spl.kwb
 endef
 
+define U-Boot/mvebu_espressobin-88f3720
+  NAME:=GlobalScale ESPRESSObin
+  BUILD_DEVICES:=globalscale_espressobin
+  BUILD_SUBTARGET:=cortexa53
+  UBOOT_IMAGE:=u-boot.bin
+endef
+
 UBOOT_TARGETS:= \
-	clearfog
+	clearfog \
+	mvebu_espressobin-88f3720
 
 Build/Exports:=$(Host/Exports)
 
