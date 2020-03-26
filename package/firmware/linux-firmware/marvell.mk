@@ -31,6 +31,15 @@ define Package/mwifiex-sdio-firmware/install
 endef
 $(eval $(call BuildPackage,mwifiex-sdio-firmware))
 
+Package/mwifiex-usb-firmware = $(call Package/firmware-default,Marvell 8997 firmware)
+define Package/mwifiex-usb-firmware/install
+	$(INSTALL_DIR) $(1)/lib/firmware/mrvl
+	$(INSTALL_DATA) \
+		$(PKG_BUILD_DIR)/mrvl/pcieusb8997_combo_v4.bin \
+		$(1)/lib/firmware/mrvl/
+endef
+$(eval $(call BuildPackage,mwifiex-usb-firmware))
+
 Package/libertas-usb-firmware = $(call Package/firmware-default,Marvell 8388/8682 USB firmware)
 define Package/libertas-usb-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/libertas
