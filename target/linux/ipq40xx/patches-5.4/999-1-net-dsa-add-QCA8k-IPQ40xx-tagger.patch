@@ -1,0 +1,37 @@
+From eca30bea7121fed0f71f915a1bde6e5cd916be08 Mon Sep 17 00:00:00 2001
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Sun, 29 Mar 2020 21:57:47 +0200
+Subject: [PATCH 1/2] net: dsa: add QCA8k IPQ40xx tagger
+
+This enables building the QCA8k IPQ40xx tagger.
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ net/dsa/Kconfig  | 6 ++++++
+ net/dsa/Makefile | 1 +
+ 2 files changed, 7 insertions(+)
+
+--- a/net/dsa/Kconfig
++++ b/net/dsa/Kconfig
+@@ -85,6 +85,12 @@ config NET_DSA_TAG_QCA
+ 	  Say Y or M if you want to enable support for tagging frames for
+ 	  the Qualcomm Atheros QCA8K switches.
+ 
++config NET_DSA_TAG_QCA_IPQ40XX
++	tristate "Tag driver for Qualcomm Atheros QCA8K switches in IPQ40xx SoC-s"
++	help
++	  Say Y or M if you want to enable support for tagging frames for
++	  the Qualcomm Atheros QCA8K switches in IPQ40xx SoC-s.
++
+ config NET_DSA_TAG_LAN9303
+ 	tristate "Tag driver for SMSC/Microchip LAN9303 family of switches"
+ 	help
+--- a/net/dsa/Makefile
++++ b/net/dsa/Makefile
+@@ -13,5 +13,6 @@ obj-$(CONFIG_NET_DSA_TAG_KSZ) += tag_ksz
+ obj-$(CONFIG_NET_DSA_TAG_LAN9303) += tag_lan9303.o
+ obj-$(CONFIG_NET_DSA_TAG_MTK) += tag_mtk.o
+ obj-$(CONFIG_NET_DSA_TAG_QCA) += tag_qca.o
++obj-$(CONFIG_NET_DSA_TAG_QCA_IPQ40XX) += tag_qca_ipq40xx.o
+ obj-$(CONFIG_NET_DSA_TAG_SJA1105) += tag_sja1105.o
+ obj-$(CONFIG_NET_DSA_TAG_TRAILER) += tag_trailer.o

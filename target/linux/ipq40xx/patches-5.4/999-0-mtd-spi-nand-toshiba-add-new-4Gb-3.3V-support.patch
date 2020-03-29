@@ -1,0 +1,45 @@
+From 9ee0f956cfbb87b19dfbbb9d588fef282eb5e95e Mon Sep 17 00:00:00 2001
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Fri, 3 Jan 2020 17:14:27 +0100
+Subject: mtd: spinand: add support for Toshiba TC58CVG2S0HRAIJ
+
+Toshiba recently launched new revisions of their serial SLC NAND series.
+TC58CVG2S0HRAIJ is a refresh of previous series with minor improvements.
+Basic parameters are same so lets add support for this new revision.
+
+Datasheet: https://business.kioxia.com/info/docget.jsp?did=58601&prodName=TC58CVG2S0HRAIJ
+
+Tested under kernel 5.4.7.
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/mtd/nand/spi/toshiba.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+(limited to 'drivers/mtd/nand/spi/toshiba.c')
+
+diff --git a/drivers/mtd/nand/spi/toshiba.c b/drivers/mtd/nand/spi/toshiba.c
+index 1cb3760ff779..0db5ee4e82af 100644
+--- a/drivers/mtd/nand/spi/toshiba.c
++++ b/drivers/mtd/nand/spi/toshiba.c
+@@ -124,6 +124,16 @@ static const struct spinand_info toshiba_spinand_table[] = {
+ 		     0,
+ 		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
+ 				     tc58cxgxsx_ecc_get_status)),
++	/* 3.3V 4Gb */
++	SPINAND_INFO("TC58CVG2S0", 0xED,
++		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_variants,
++					      &update_cache_variants),
++		     0,
++		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
++				     tc58cxgxsx_ecc_get_status)),
+ 	/* 1.8V 1Gb */
+ 	SPINAND_INFO("TC58CYG0S3", 0xB2,
+ 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
+-- 
+cgit 1.2-0.3.lf.el7

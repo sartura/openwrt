@@ -1,0 +1,35 @@
+From 8a99af830c869b74f7dc2335ecb0430ed435a2fd Mon Sep 17 00:00:00 2001
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Sun, 29 Mar 2020 22:42:54 +0200
+Subject: [PATCH] net: dsa: add IPQ40xx DSA tag to header
+
+Wont build without this.
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ include/net/dsa.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 541fb514e31d..ab49e6c44dd6 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -42,6 +42,7 @@ struct phylink_link_state;
+ #define DSA_TAG_PROTO_8021Q_VALUE		12
+ #define DSA_TAG_PROTO_SJA1105_VALUE		13
+ #define DSA_TAG_PROTO_KSZ8795_VALUE		14
++#define DSA_TAG_PROTO_QCA_IPQ40XX_VALUE	17
+ 
+ enum dsa_tag_protocol {
+ 	DSA_TAG_PROTO_NONE		= DSA_TAG_PROTO_NONE_VALUE,
+@@ -59,6 +60,7 @@ enum dsa_tag_protocol {
+ 	DSA_TAG_PROTO_8021Q		= DSA_TAG_PROTO_8021Q_VALUE,
+ 	DSA_TAG_PROTO_SJA1105		= DSA_TAG_PROTO_SJA1105_VALUE,
+ 	DSA_TAG_PROTO_KSZ8795		= DSA_TAG_PROTO_KSZ8795_VALUE,
++	DSA_TAG_PROTO_QCA_IPQ40XX		= DSA_TAG_PROTO_QCA_IPQ40XX_VALUE,
+ };
+ 
+ struct packet_type;
+-- 
+2.26.0
+

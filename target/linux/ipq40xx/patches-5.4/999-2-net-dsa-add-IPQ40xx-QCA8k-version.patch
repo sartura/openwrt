@@ -1,0 +1,42 @@
+From ac906e9a1afe37c0dc966df2f15dfced0dbed850 Mon Sep 17 00:00:00 2001
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Sun, 29 Mar 2020 22:00:41 +0200
+Subject: [PATCH 2/2] net: dsa: add IPQ40xx QCA8k version
+
+This enables building the custom QCA8k version
+for IPQ40xx.
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ drivers/net/dsa/Kconfig  | 9 +++++++++
+ drivers/net/dsa/Makefile | 1 +
+ 2 files changed, 10 insertions(+)
+
+--- a/drivers/net/dsa/Kconfig
++++ b/drivers/net/dsa/Kconfig
+@@ -63,6 +63,15 @@ config NET_DSA_QCA8K
+ 	  This enables support for the Qualcomm Atheros QCA8K Ethernet
+ 	  switch chips.
+ 
++config NET_DSA_IPQ40XX_QCA8K
++	tristate "Qualcomm Atheros QCA8K Ethernet switch in IPQ40xx SoC-s support"
++	depends on NET_DSA
++	select NET_DSA_TAG_QCA_IPQ40XX
++	select REGMAP
++	---help---
++	  This enables support for the Qualcomm Atheros QCA8K Ethernet
++	  switch chips in IPQ40xx SoC-s.
++
+ config NET_DSA_REALTEK_SMI
+ 	tristate "Realtek SMI Ethernet switch family support"
+ 	depends on NET_DSA
+--- a/drivers/net/dsa/Makefile
++++ b/drivers/net/dsa/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_NET_DSA_LANTIQ_GSWIP) += la
+ obj-$(CONFIG_NET_DSA_MT7530)	+= mt7530.o
+ obj-$(CONFIG_NET_DSA_MV88E6060) += mv88e6060.o
+ obj-$(CONFIG_NET_DSA_QCA8K)	+= qca8k.o
++obj-$(CONFIG_NET_DSA_IPQ40XX_QCA8K)	+= ipq40xx-qca8k.o
+ obj-$(CONFIG_NET_DSA_REALTEK_SMI) += realtek-smi.o
+ realtek-smi-objs		:= realtek-smi-core.o rtl8366.o rtl8366rb.o
+ obj-$(CONFIG_NET_DSA_SMSC_LAN9303) += lan9303-core.o
