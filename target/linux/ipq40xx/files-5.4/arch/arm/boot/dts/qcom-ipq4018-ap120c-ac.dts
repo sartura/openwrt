@@ -241,13 +241,8 @@
 			#size-cells = <1>;
 
 			partition@0 {
-				label = "rootfs1";
-				reg = <0x00000000 0x04000000>;
-			};
-
-			partition@4000000 {
-				label = "rootfs2";
-				reg = <0x04000000 0x04000000>;
+				label = "rootfs";
+				reg = <0x00000000 0x20000000>;
 			};
 		};
 	};

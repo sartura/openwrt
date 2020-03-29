@@ -122,8 +122,8 @@ define Device/alfa-network_ap120c-ac
 	SOC := qcom-ipq4018
 	DEVICE_PACKAGES := kmod-usb-acm \
 		kmod-tpm-i2c-atmel uboot-envtools
-	BLOCKSIZE := 128k
-	PAGESIZE := 2048
+	BLOCKSIZE := 256k
+	PAGESIZE := 4096
 	IMAGE_SIZE := 65536k
 	IMAGES := nand-factory.bin nand-sysupgrade.bin
 	IMAGE/nand-factory.bin := append-ubi | qsdk-ipq-factory-nand
