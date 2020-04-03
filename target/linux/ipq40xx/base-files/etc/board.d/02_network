@@ -18,7 +18,7 @@ ipq40xx_setup_interfaces()
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
 		;;
 	alfa-network,ap120c-ac)
-		ucidef_set_interfaces_lan_wan "lan1" "lan2" "lan3" "lan4" "wan"
+		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
 		;;
 	aruba,ap-303h)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"

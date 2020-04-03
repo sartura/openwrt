@@ -384,7 +384,7 @@ qca8k_port_set_status(struct qca8k_priv *priv, int port, int enable)
 	u32 mask = QCA8K_PORT_STATUS_TXMAC | QCA8K_PORT_STATUS_RXMAC;
 
 	/* Port 0 and 6 have no internal PHY */
-	if (port > 0 && port < 6 && priv->mac_mode != 3)
+	if (port > 0 && port < 6 && priv->mac_mode != PORT_WRAPPER_RGMII)
 		mask |= QCA8K_PORT_STATUS_LINK_AUTO;
 
 	if (enable)
@@ -550,8 +550,7 @@ static int
 qca8k_setup(struct dsa_switch *ds)
 {
 	struct qca8k_priv *priv = (struct qca8k_priv *)ds->priv;
-	phy_interface_t phy_mode = PHY_INTERFACE_MODE_NA;
-	int ret, i;
+	int ret, i, phy_mode = -1;
 	u32 mask;
 
 	/* Make sure that port 0 is the cpu port */
@@ -568,15 +567,15 @@ qca8k_setup(struct dsa_switch *ds)
 	if (IS_ERR(priv->regmap))
 		pr_warn("regmap initialization failed");
 
-	ret = qca8k_setup_mdio_bus(priv);
+	/*ret = qca8k_setup_mdio_bus(priv);
 	if (ret)
-		return ret;
+		return ret;*/
 
 	/* Initialize CPU port pad mode (xMII type, delays...) */
-	ret = of_get_phy_mode(dsa_to_port(ds, QCA8K_CPU_PORT)->dn, &phy_mode);
-	if (ret) {
+	phy_mode = of_get_phy_mode(ds->ports[QCA8K_CPU_PORT].dn);
+	if (phy_mode < 0) {
 		pr_err("Can't find phy-mode for master device\n");
-		return ret;
+		return phy_mode;
 	}
 	ret = qca8k_set_pad_ctrl(priv, QCA8K_CPU_PORT, phy_mode);
 	if (ret < 0)
@@ -596,15 +595,6 @@ qca8k_setup(struct dsa_switch *ds)
 
 	/* Disable buggy AZ */
 	qca8k_write(priv, QCA8K_REG_EEE_CTRL, 0);
-
-	/* enable jumbo frames */
-	/*qca8k_rmw(priv, QCA8K_REG_MAX_FRAME_SIZE,
-		  QCA8K_MAX_FRAME_SIZE_MTU, 9018 + 8 + 2);*/
-
-	/* Potentialy enable */
-	/*qca8k_write(priv, QCA8K_REG_PORT_FLOWCTRL_THRESH(0),
-		(QCA8K_PORT0_FC_THRESH_ON_DFLT << 16) |
-		QCA8K_PORT0_FC_THRESH_OFF_DFLT);*/
 
 	/* Enable QCA header mode on the cpu port */
 	qca8k_write(priv, QCA8K_REG_PORT_HDR_CTRL(QCA8K_CPU_PORT), 0);
@@ -698,7 +688,7 @@ qca8k_adjust_link(struct dsa_switch *ds, int port, struct phy_device *phy)
 		reg |= QCA8K_PORT_STATUS_DUPLEX;
 
 	/* Force flow control */
-	if (dsa_is_cpu_port(ds, port) || priv->mac_mode == 3)
+	if (dsa_is_cpu_port(ds, port) || priv->mac_mode == PORT_WRAPPER_RGMII)
 		reg |= QCA8K_PORT_STATUS_RXFLOW | QCA8K_PORT_STATUS_TXFLOW |
 			   QCA8K_PORT_TXHALF_FLOW;
 
@@ -1568,7 +1558,7 @@ static void
 qca8k_dsa_init_work(struct work_struct *work)
 {
 	struct qca8k_priv *priv = container_of(work, struct qca8k_priv, dsa_init.work);
-	struct device *parent = priv->dev->parent;
+	struct device *parent = priv->pdev->dev.parent;
 	int ret;
 
 	ret = dsa_register_switch(priv->ds);
@@ -1578,17 +1568,17 @@ qca8k_dsa_init_work(struct work_struct *work)
 		return;
 
 	case -EPROBE_DEFER:
-		dev_dbg(priv->dev, "dsa_register_switch defered.\n");
+		dev_warn(&priv->pdev->dev, "dsa_register_switch defered.\n");
 		schedule_delayed_work(&priv->dsa_init, msecs_to_jiffies(200));
 		return;
 
 	default:
-		dev_err(priv->dev, "dsa_register_switch failed with (%d).\n", ret);
+		dev_err(&priv->pdev->dev, "dsa_register_switch failed with (%d).\n", ret);
 		/* unbind anything failed */
 		if (parent)
 			device_lock(parent);
 
-		device_release_driver(priv->dev);
+		device_release_driver(&priv->pdev->dev);
 		if (parent)
 			device_unlock(parent);
 		return;
@@ -1596,50 +1586,54 @@ qca8k_dsa_init_work(struct work_struct *work)
 }
 
 static int
-qca8k_sw_probe(struct mdio_device *mdiodev)
+qca8k_sw_probe(struct platform_device *pdev)
 {
 	struct qca8k_priv *priv;
-	struct device_node *dn;
-	int ret;
+	struct device_node *np = pdev->dev.of_node, *mii_np;
 	u32 id;
-
-	pr_warn("QCA8k is probing\n");
+	int ret;
 
 	/* allocate the private data struct so that we can probe the switches
 	 * ID register
 	 */
-	priv = devm_kzalloc(&mdiodev->dev, sizeof(*priv), GFP_KERNEL);
+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;
 
-	priv->bus = mdiodev->bus;
-	priv->dev = &mdiodev->dev;
+	priv->pdev = pdev;
 
-	dn = mdiodev->dev.of_node;
-
-	priv->ess_clk = devm_clk_get(priv->dev, "ess_clk");
+	priv->ess_clk = of_clk_get_by_name(np, "ess_clk");
 	if (IS_ERR(priv->ess_clk)) {
-		dev_err(priv->dev, "Failed to get ess_clk\n");
+		dev_err(&pdev->dev, "Failed to get ess_clk\n");
 		return PTR_ERR(priv->ess_clk);
 	}
 
-	priv->ess_rst = devm_reset_control_get(priv->dev, "ess_rst");
+	priv->ess_rst = devm_reset_control_get(&pdev->dev, "ess_rst");
 	if (IS_ERR(priv->ess_rst)) {
-		dev_err(priv->dev, "Failed to get ess_rst control!\n");
+		dev_err(&pdev->dev, "Failed to get ess_rst control!\n");
 		return PTR_ERR(priv->ess_rst);
 	}
 
-	ret = of_property_read_u32(dn, "mac-mode", &priv->mac_mode);
+	ret = of_property_read_u32(np, "mac-mode", &priv->mac_mode);
 	if (ret < 0)
 		return -EINVAL;
 
-	priv->base = syscon_node_to_regmap(dn);
+	priv->base = syscon_node_to_regmap(np);
 	if (IS_ERR_OR_NULL(priv->base))
 		return -EINVAL;
 
-	priv->psgmii = syscon_regmap_lookup_by_phandle(dn, "psgmii-phy");
+	priv->psgmii = syscon_regmap_lookup_by_phandle(np, "psgmii-phy");
 	if (IS_ERR_OR_NULL(priv->psgmii))
 		return -EINVAL;
+
+	mii_np = of_parse_phandle(np, "mii", 0);
+	if (!mii_np)
+		return -EINVAL;
+
+	priv->bus = of_mdio_find_bus(mii_np);
+	of_node_put(mii_np);
+	if (!priv->bus)
+		return -EPROBE_DEFER;
 
 	priv->reset_gpio = devm_gpiod_get_optional(priv->dev, "reset",
 						   GPIOD_ASIS);
@@ -1659,28 +1653,31 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
 	id = qca8k_read(priv, QCA8K_REG_MASK_CTRL);
 	id >>= QCA8K_MASK_CTRL_ID_S;
 	id &= QCA8K_MASK_CTRL_ID_M;
-	if (id != QCA8K_ID_QCA8337){
-		pr_warn("Not QCA8337 ID\n");
+	if (id != QCA8K_ID_QCA8337 && id != QCA8K_ID_IPQ40XX_QCA8337) {
+		pr_warn("No QCA8337 ID found\n");
+		pr_warn("ID found is 0x%x\n", id);
 		return -ENODEV;
 	}
 
-	priv->ds = devm_kzalloc(&mdiodev->dev, sizeof(*priv->ds),
-				QCA8K_NUM_PORTS);
+	priv->ds = dsa_switch_alloc(&pdev->dev, QCA8K_NUM_PORTS);
 	if (!priv->ds)
 		return -ENOMEM;
 
-	priv->ds->dev = &mdiodev->dev;
-	priv->ds->num_ports = QCA8K_NUM_PORTS;
 	priv->ds->priv = priv;
 	priv->ops = qca8k_switch_ops;
 	priv->ds->ops = &priv->ops;
 	mutex_init(&priv->reg_mutex);
-	dev_set_drvdata(&mdiodev->dev, priv);
 
 	clk_prepare_enable(priv->ess_clk);
+
+	platform_set_drvdata(pdev, priv);
+
 	ar40xx_qm_err_check_work_start(priv);
+
 	ess_reset(priv);
+
 	ar40xx_mac_mode_init(priv);
+
 	reset_control_put(priv->ess_rst);
 
 	/* Ok. What's going on with the delayed dsa_switch_register?!
@@ -1707,75 +1704,23 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
 	INIT_DELAYED_WORK(&priv->dsa_init, qca8k_dsa_init_work);
 	schedule_delayed_work(&priv->dsa_init, msecs_to_jiffies(1000));
 
-	//return dsa_register_switch(priv->ds);
-
 	return 0;
 }
-
-static void
-qca8k_sw_remove(struct mdio_device *mdiodev)
-{
-	struct qca8k_priv *priv = dev_get_drvdata(&mdiodev->dev);
-	int i;
-
-	for (i = 0; i < QCA8K_NUM_PORTS; i++)
-		qca8k_port_set_status(priv, i, 0);
-
-	dsa_unregister_switch(priv->ds);
-}
-
-#ifdef CONFIG_PM_SLEEP
-static void
-qca8k_set_pm(struct qca8k_priv *priv, int enable)
-{
-	int i;
-
-	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
-		if (!priv->port_sts[i].enabled)
-			continue;
-
-		qca8k_port_set_status(priv, i, enable);
-	}
-}
-
-static int qca8k_suspend(struct device *dev)
-{
-	struct qca8k_priv *priv = dev_get_drvdata(dev);
-
-	qca8k_set_pm(priv, 0);
-
-	return dsa_switch_suspend(priv->ds);
-}
-
-static int qca8k_resume(struct device *dev)
-{
-	struct qca8k_priv *priv = dev_get_drvdata(dev);
-
-	qca8k_set_pm(priv, 1);
-
-	return dsa_switch_resume(priv->ds);
-}
-#endif /* CONFIG_PM_SLEEP */
-
-static SIMPLE_DEV_PM_OPS(qca8k_pm_ops,
-			 qca8k_suspend, qca8k_resume);
 
 static const struct of_device_id qca8k_of_match[] = {
 	{ .compatible = "qca,qca8337-mmio" },
 	{ /* sentinel */ },
 };
 
-static struct mdio_driver qca8kmdio_driver = {
+static struct platform_driver qca8kmmio_driver = {
 	.probe  = qca8k_sw_probe,
-	.remove = qca8k_sw_remove,
-	.mdiodrv.driver = {
+	.driver = {
 		.name = "qca8k",
 		.of_match_table = qca8k_of_match,
-		.pm = &qca8k_pm_ops,
 	},
 };
 
-mdio_module_driver(qca8kmdio_driver);
+module_platform_driver(qca8kmmio_driver);
 
 MODULE_AUTHOR("Mathieu Olivari, John Crispin <john@phrozen.org>");
 MODULE_DESCRIPTION("Driver for QCA8K ethernet switch family");

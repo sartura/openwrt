@@ -17,6 +17,7 @@
 
 #define PHY_ID_QCA8337					0x004dd036
 #define QCA8K_ID_QCA8337				0x13
+#define QCA8K_ID_IPQ40XX_QCA8337		0x14
 
 #define QCA8K_NUM_FDB_RECORDS				2048
 
@@ -189,6 +190,7 @@ struct qca8k_priv {
 	struct gpio_desc *reset_gpio;
 
 	/* AR40xx specific */
+	struct platform_device *pdev;
 	struct delayed_work dsa_init;
 	struct clk *ess_clk;
 	struct reset_control *ess_rst;

@@ -1,0 +1,45 @@
+From a63a87e6b4fc94465ce5c111b2103176c7a4dcf2 Mon Sep 17 00:00:00 2001
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Fri, 3 Apr 2020 14:42:48 +0200
+Subject: [PATCH] Add ESSEDMA
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ drivers/net/ethernet/qualcomm/Kconfig  | 9 +++++++++
+ drivers/net/ethernet/qualcomm/Makefile | 1 +
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/net/ethernet/qualcomm/Kconfig b/drivers/net/ethernet/qualcomm/Kconfig
+index 73a71891cd98..095c48c5b2c1 100644
+--- a/drivers/net/ethernet/qualcomm/Kconfig
++++ b/drivers/net/ethernet/qualcomm/Kconfig
+@@ -67,6 +67,15 @@ config IPQ_ESS
+ 	  This driver supports the Qualcomm IPQ40xx built-int
+ 	  ESS ethernet controller.
+ 
++config ESSEDMA
++	tristate "Qualcomm Atheros ESS Edma support"
++	---help---
++	  This driver supports ethernet edma adapter.
++	  Say Y to build this driver.
++
++	  To compile this driver as a module, choose M here. The module
++	  will be called essedma.ko.
++
+ source "drivers/net/ethernet/qualcomm/rmnet/Kconfig"
+ 
+ endif # NET_VENDOR_QUALCOMM
+diff --git a/drivers/net/ethernet/qualcomm/Makefile b/drivers/net/ethernet/qualcomm/Makefile
+index 9e8aa02555cd..c8f18f87c6dc 100644
+--- a/drivers/net/ethernet/qualcomm/Makefile
++++ b/drivers/net/ethernet/qualcomm/Makefile
+@@ -11,5 +11,6 @@ qcauart-objs := qca_uart.o
+ 
+ obj-y += emac/
+ obj-y += ipqess/
++obj-$(CONFIG_ESSEDMA) += essedma/
+ 
+ obj-$(CONFIG_RMNET) += rmnet/
+-- 
+2.26.0
+
