@@ -640,7 +640,7 @@
 				essport0: port@0 { /* MAC0 */
 					reg = <0>;
 					label = "cpu";
-					ethernet = <&gmac1>;
+					ethernet = <&gmac>;
 					phy-mode = "internal";
 
 					fixed-link {
@@ -682,7 +682,7 @@
 			};
 		};
 
-		/*gmac: ethernet@c080000 {
+		gmac: ethernet@c080000 {
 			compatible = "qcom,ipq4019-ess-edma";
 			reg = <0xc080000 0x8000>;
 			interrupts = <GIC_SPI  65 IRQ_TYPE_EDGE_RISING>,
@@ -727,69 +727,11 @@
 				pause;
 				asym-pause;
 			};
-		};*/
+		};
 
 		portwrapper: portmux@1953000 {
 			compatible = "syscon";
 			reg = <0x1953000 0x1000>;
-		};
-
-		edma: edma@c080000 {
-			compatible = "qcom,ess-edma";
-			reg = <0xc080000 0x8000>;
-			qcom,page-mode = <0>;
-			qcom,rx_head_buf_size = <1540>;
-			qcom,mdio_supported;
-			qcom,poll_required = <1>;
-			qcom,num_gmac = <2>;
-			interrupts = <0  65 IRQ_TYPE_EDGE_RISING
-				      0  66 IRQ_TYPE_EDGE_RISING
-				      0  67 IRQ_TYPE_EDGE_RISING
-				      0  68 IRQ_TYPE_EDGE_RISING
-				      0  69 IRQ_TYPE_EDGE_RISING
-				      0  70 IRQ_TYPE_EDGE_RISING
-				      0  71 IRQ_TYPE_EDGE_RISING
-				      0  72 IRQ_TYPE_EDGE_RISING
-				      0  73 IRQ_TYPE_EDGE_RISING
-				      0  74 IRQ_TYPE_EDGE_RISING
-				      0  75 IRQ_TYPE_EDGE_RISING
-				      0  76 IRQ_TYPE_EDGE_RISING
-				      0  77 IRQ_TYPE_EDGE_RISING
-				      0  78 IRQ_TYPE_EDGE_RISING
-				      0  79 IRQ_TYPE_EDGE_RISING
-				      0  80 IRQ_TYPE_EDGE_RISING
-				      0 240 IRQ_TYPE_EDGE_RISING
-				      0 241 IRQ_TYPE_EDGE_RISING
-				      0 242 IRQ_TYPE_EDGE_RISING
-				      0 243 IRQ_TYPE_EDGE_RISING
-				      0 244 IRQ_TYPE_EDGE_RISING
-				      0 245 IRQ_TYPE_EDGE_RISING
-				      0 246 IRQ_TYPE_EDGE_RISING
-				      0 247 IRQ_TYPE_EDGE_RISING
-				      0 248 IRQ_TYPE_EDGE_RISING
-				      0 249 IRQ_TYPE_EDGE_RISING
-				      0 250 IRQ_TYPE_EDGE_RISING
-				      0 251 IRQ_TYPE_EDGE_RISING
-				      0 252 IRQ_TYPE_EDGE_RISING
-				      0 253 IRQ_TYPE_EDGE_RISING
-				      0 254 IRQ_TYPE_EDGE_RISING
-				      0 255 IRQ_TYPE_EDGE_RISING>;
-
-			status = "disabled";
-
-			gmac0: gmac0 {
-				local-mac-address = [00 00 00 00 00 00];
-				vlan_tag = <1 0x1f>;
-			};
-
-			gmac1: gmac1 {
-				local-mac-address = [00 00 00 00 00 00];
-				qcom,phy_mdio_addr = <4>;
-				qcom,poll_required = <1>;
-				qcom,forced_speed = <1000>;
-				qcom,forced_duplex = <1>;
-				vlan_tag = <2 0x20>;
-			};
 		};
 
 		usb3_ss_phy: ssphy@9a000 {

@@ -14,7 +14,7 @@
 		led-failsafe = &status;
 		led-running = &status;
 		led-upgrade = &status;
-		ethernet0 = &gmac1;
+		ethernet0 = &gmac;
 	};
 
 	keys {
@@ -244,13 +244,9 @@
 	status = "okay";
 };
 
-&edma {
+&gmac {
 	status = "okay";
-}
-
-/*&gmac {
-	status = "okay";
-};*/
+};
 
 &tlmm {
 	i2c0_pins: i2c0_pinmux {

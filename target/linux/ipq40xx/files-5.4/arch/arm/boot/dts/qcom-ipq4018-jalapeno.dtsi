@@ -9,7 +9,7 @@
 / {
 
 	aliases {
-		ethernet0 = &gmac1;
+		ethernet0 = &gmac;
 	};
 
 	soc {
@@ -223,13 +223,9 @@
 	status = "okay";
 };
 
-&edma {
+&gmac {
 	status = "okay";
-}
-
-/*&gmac {
-	status = "okay";
-};*/
+};
 
 &wifi0 {
 	status = "okay";
