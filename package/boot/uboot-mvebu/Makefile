@@ -51,6 +51,13 @@ define U-Boot/espressobin-emmc
   UBOOT_MAKE_FLAGS+=DEVICE_TREE=armada-3720-espressobin-emmc
 endef
 
+define U-Boot/espressobin-ultra
+  NAME:=Marvell ESPRESSObin-Ultra
+  BUILD_DEVICES:=globalscale_espressobin-ultra
+  UBOOT_CONFIG:=mvebu_espressobin-ultra
+  BUILD_SUBTARGET:=cortexa53
+endef
+
 define U-Boot/uDPU
   NAME:=Methode uDPU
   BUILD_DEVICES:=methode_udpu
@@ -62,6 +69,7 @@ UBOOT_TARGETS:= \
 	helios4 \
 	espressobin \
 	espressobin-emmc \
+	espressobin-ultra \
 	uDPU
 
 Build/Exports:=$(Host/Exports)

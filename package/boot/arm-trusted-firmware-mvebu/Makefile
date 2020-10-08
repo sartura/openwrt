@@ -40,6 +40,16 @@ define Package/arm-trusted-firmware-mvebu-espressobin-512mb
   PLAT:=a3700
 endef
 
+define Package/arm-trusted-firmware-mvebu-espressobin-ultra
+  $(Package/arm-trusted-firmware-mvebu)
+  TITLE:=ARM Trusted Firmware for Marvell ESPRESSObin Ultra
+  DEPENDS:=+u-boot-espressobin-ultra
+  UBOOT:=espressobin-ultra
+  DDR_TOPOLOGY:=5
+  CLOCKSPRESET:=CPU_1200_DDR_750
+  PLAT:=a3700
+endef
+
 define Package/arm-trusted-firmware-mvebu-espressobin-v3-v5-1gb-1cs
   $(Package/arm-trusted-firmware-mvebu)
   TITLE:=ARM Trusted Firmware for Marvell ESPRESSObin V3-V5 (1GB 1CS)
@@ -228,6 +238,7 @@ define Build/InstallDev
 endef
 
 $(eval $(call BuildPackage,arm-trusted-firmware-mvebu-espressobin-512mb))
+$(eval $(call BuildPackage,arm-trusted-firmware-mvebu-espressobin-ultra))
 $(eval $(call BuildPackage,arm-trusted-firmware-mvebu-espressobin-v3-v5-1gb-1cs))
 $(eval $(call BuildPackage,arm-trusted-firmware-mvebu-espressobin-v3-v5-1gb-1cs-emmc))
 $(eval $(call BuildPackage,arm-trusted-firmware-mvebu-espressobin-v3-v5-1gb-2cs))

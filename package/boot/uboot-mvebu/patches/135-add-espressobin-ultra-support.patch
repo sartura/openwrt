@@ -1,0 +1,262 @@
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -203,6 +203,7 @@ dtb-$(CONFIG_ARCH_MVEBU) +=			\
+ 	armada-3720-db.dtb			\
+ 	armada-3720-espressobin.dtb		\
+ 	armada-3720-espressobin-emmc.dtb	\
++	armada-3720-espressobin-ultra.dtb	\
+ 	armada-3720-turris-mox.dtb		\
+ 	armada-3720-uDPU.dtb			\
+ 	armada-375-db.dtb			\
+--- /dev/null
++++ b/arch/arm/dts/armada-3720-espressobin-ultra.dts
+@@ -0,0 +1,146 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for ESPRESSObin-Ultra
++ * Copyright (C) 2019 Globalscale technologies, Inc.
++ *
++ * Jason Hung <jhung@globalscaletechnologies.com>
++ */
++
++/dts-v1/;
++
++#include "armada-3720-espressobin.dtsi"
++
++/ {
++	model = "Marvell Armada 3720 ESPRESSOBin-Ultra";
++	compatible = "globalscale,espressobin-ultra", "marvell,armada3720",
++		     "marvell,armada3710";
++
++	reg_usb3_vbus: usb3_vbus@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "usb3-vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		shutdown-delay-us = <1000000>;
++		gpio = <&gpionb 19 GPIO_ACTIVE_HIGH>;
++	};
++
++	reg_wifi_vbus: wifi_vbus@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "wifi-vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		shutdown-delay-us = <1000000>;
++		gpio = <&gpionb 4 GPIO_ACTIVE_HIGH>;
++	};
++
++	mvswitch: switch@000000{
++		compatible = "marvell,mv88e6xxx";
++		status = "okay";
++		phy-addr = <3>;
++		cpu-port = <0x0>;
++		port-mask = <0x3f>;
++	};
++
++	gpio-leds {
++		pinctrl-names = "default";
++		pinctrl-0 = <&led1_pins>, <&led2_pins>, <&led3_pins>, <&led4_pins>;
++
++		compatible = "gpio-leds";
++
++		led1 {
++			label = "led1";
++			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++		led2 {
++			label = "led2";
++			gpios = <&gpionb 12 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++		led3 {
++			label = "led3";
++			gpios = <&gpionb 13 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++		led4 {
++			label = "led4";
++			gpios = <&gpionb 14 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++	};
++
++	scsi: scsi {
++		compatible = "marvell,mvebu-scsi";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		max-id = <1>;
++		max-lun = <1>;
++		status = "okay";
++	};
++
++	mdio: mdio@32004 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		ethphy0: ethernet-phy@0 {
++			 reg = <1>;
++		};
++	};
++};
++
++&pinctrl_nb {
++	led1_pins: led1-pins {
++		groups = "pwm0";
++		function = "gpio";
++	};
++	led2_pins: led2-pins {
++		groups = "pwm1";
++		function = "gpio";
++	};
++	led3_pins: led3-pins {
++		groups = "pwm2";
++		function = "gpio";
++	};
++	led4_pins: led4-pins {
++		groups = "pwm3";
++		function = "gpio";
++	};
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++
++	pcf8563: rtc@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
++
++&sdhci0 {
++	status = "disabled";
++};
++
++&sdhci1 {
++	non-removable;
++	bus-width = <8>;
++	mmc-ddr-1_8v;
++	mmc-hs400-1_8v;
++	marvell,pad-type = "fixed-1-8v";
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc_pins>;
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	mmccard: mmccard@0 {
++		compatible = "mmc-card";
++		reg = <0>;
++	};
++};
++
++&usb3 {
++	vbus-supply = <&reg_usb3_vbus>;
++	status = "okay";
++};
+--- /dev/null
++++ b/configs/mvebu_espressobin-ultra_defconfig
+@@ -0,0 +1,100 @@
++CONFIG_ARM=y
++CONFIG_ARCH_MVEBU=y
++CONFIG_SYS_TEXT_BASE=0x00000000
++CONFIG_SYS_MALLOC_F_LEN=0x2000
++CONFIG_TARGET_MVEBU_ARMADA_37XX=y
++CONFIG_ENV_SIZE=0x10000
++CONFIG_ENV_OFFSET=0x3F0000
++CONFIG_ENV_SECT_SIZE=0x10000
++CONFIG_DEBUG_UART_BASE=0xd0012000
++CONFIG_DEBUG_UART_CLOCK=25804800
++CONFIG_DEBUG_UART=y
++CONFIG_AHCI=y
++CONFIG_DISTRO_DEFAULTS=y
++CONFIG_AHCI=y
++# CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
++CONFIG_FIT=y
++CONFIG_SPI_BOOT=y
++CONFIG_SYS_CONSOLE_INFO_QUIET=y
++# CONFIG_DISPLAY_CPUINFO is not set
++# CONFIG_DISPLAY_BOARDINFO is not set
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_ARCH_EARLY_INIT_R=y
++CONFIG_BOARD_EARLY_INIT_F=y
++CONFIG_SYS_PROMPT="Marvell>> "
++# CONFIG_CMD_ELF is not set
++# CONFIG_CMD_IMI is not set
++# CONFIG_CMD_XIMG is not set
++# CONFIG_CMD_FLASH is not set
++CONFIG_CMD_GPIO=y
++CONFIG_CMD_I2C=y
++CONFIG_CMD_MMC=y
++CONFIG_CMD_PART=y
++CONFIG_CMD_SF=y
++CONFIG_CMD_SPI=y
++CONFIG_CMD_USB=y
++# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_TFTPPUT=y
++CONFIG_CMD_CACHE=y
++CONFIG_CMD_TIME=y
++CONFIG_CMD_MVEBU_BUBT=y
++CONFIG_CMD_EXT4_WRITE=y
++CONFIG_MAC_PARTITION=y
++CONFIG_DEFAULT_DEVICE_TREE="armada-3720-espressobin-ultra"
++CONFIG_ENV_IS_IN_SPI_FLASH=y
++CONFIG_NET_RANDOM_ETHADDR=y
++CONFIG_AHCI_MVEBU=y
++CONFIG_CLK=y
++CONFIG_CLK_MVEBU=y
++CONFIG_DM_GPIO=y
++CONFIG_DM_I2C=y
++CONFIG_DM_I2C_GPIO=y
++CONFIG_MISC=y
++CONFIG_DM_MMC=y
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_SDMA=y
++CONFIG_MMC_SDHCI_XENON=y
++CONFIG_MTD=y
++CONFIG_SPI_FLASH=y
++CONFIG_SF_DEFAULT_MODE=0
++CONFIG_SPI_FLASH_BAR=y
++CONFIG_SPI_FLASH_MACRONIX=y
++CONFIG_SPI_FLASH_SPANSION=y
++CONFIG_SPI_FLASH_STMICRO=y
++CONFIG_SPI_FLASH_WINBOND=y
++CONFIG_SPI_FLASH_ISSI=y
++CONFIG_SPI_FLASH_GIGADEVICE=y
++CONFIG_MV88E6XXX_SWITCH=y
++CONFIG_PHYLIB=y
++# CONFIG_SPI_FLASH_USE_4K_SECTORS is not set
++CONFIG_SPI_FLASH_MTD=y
++CONFIG_PHYLIB_10G=y
++CONFIG_PHY_MARVELL=y
++CONFIG_PHY_GIGE=y
++CONFIG_E1000=y
++CONFIG_MVNETA=y
++CONFIG_PCI=y
++CONFIG_DM_PCI=y
++CONFIG_PCI_AARDVARK=y
++CONFIG_MVEBU_COMPHY_SUPPORT=y
++CONFIG_PINCTRL=y
++CONFIG_PINCTRL_ARMADA_37XX=y
++CONFIG_DM_REGULATOR_FIXED=y
++CONFIG_DM_REGULATOR_GPIO=y
++# CONFIG_SPL_SERIAL_PRESENT is not set
++CONFIG_DEBUG_MVEBU_A3700_UART=y
++CONFIG_DEBUG_UART_SHIFT=2
++CONFIG_DEBUG_UART_ANNOUNCE=y
++CONFIG_MVEBU_A3700_UART=y
++CONFIG_MVEBU_A3700_SPI=y
++CONFIG_USB=y
++CONFIG_DM_USB=y
++CONFIG_USB_XHCI_HCD=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_HOST_ETHER=y
++CONFIG_USB_ETHER_ASIX=y
++CONFIG_USB_ETHER_MCS7830=y
++CONFIG_USB_ETHER_RTL8152=y
++CONFIG_USB_ETHER_SMSC95XX=y
++CONFIG_LZO=y
++CONFIG_SPL_LZO=y
