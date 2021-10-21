@@ -7,6 +7,11 @@
 #include <dt-bindings/soc/qcom,tcsr.h>
 
 / {
+
+	aliases {
+		ethernet1 = &swport4;
+	};
+
 	soc {
 		rng@22000 {
 			status = "okay";
@@ -17,6 +22,7 @@
 
 			pinctrl-0 = <&mdio_pins>;
 			pinctrl-names = "default";
+			reset-gpios = <&tlmm 62 GPIO_ACTIVE_LOW>;
 		};
 
 		counter@4a1000 {
@@ -237,5 +243,29 @@
 };
 
 &usb2_hs_phy {
+	status = "okay";
+};
+
+&gmac {
+	status = "okay";
+};
+
+&switch {
+	status = "okay";
+};
+
+&swport3 {
+	status = "okay";
+
+	label = "lan";
+};
+
+&swport4 {
+	status = "okay";
+
+	label = "wan";
+};
+
+&psgmii_phy {
 	status = "okay";
 };
