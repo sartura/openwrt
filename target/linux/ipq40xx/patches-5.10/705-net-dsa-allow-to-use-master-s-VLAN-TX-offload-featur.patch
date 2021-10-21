@@ -1,0 +1,50 @@
+From 89094543cffb4d3c4dfd43577abf817fcac97c92 Mon Sep 17 00:00:00 2001
+From: Gabor Juhos <j4g8y7@gmail.com>
+Date: Mon, 4 Jan 2021 12:58:14 +0100
+Subject: [PATCH] net: dsa: allow to use master's VLAN TX offload features
+
+Currently the DSA slave devices does not inheritates the VLAN
+TX offloading features of the master device. This makes perfect
+sense where the vlan tag inserted by the tagging protocol drivers
+makes this impossible. However there are certain cases where
+the tagging protocol has no such restrictions.
+
+The change adds a new flag to struct dsa_device_ops which can
+be used by the taging protocol drivers to indicate to the DSA
+core that vlan tx offload is possible when using the given
+protocol driver.
+
+The patch changes the DSA slave device creation code also to
+inherit the master's vlan tx offloading features if the new
+flag has been set by the protocol driver.
+
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+ include/net/dsa.h | 1 +
+ net/dsa/slave.c   | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -95,6 +95,7 @@ struct dsa_device_ops {
+ 	 */
+ 	bool promisc_on_master;
+ 	bool tail_tag;
++	bool vlan_tx_offload_allowed;
+ };
+ 
+ /* This structure defines the control interfaces that are overlayed by the
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -1852,6 +1852,11 @@ int dsa_slave_create(struct dsa_port *po
+ 	slave_dev->features = master->vlan_features | NETIF_F_HW_TC;
+ 	if (ds->ops->port_vlan_add && ds->ops->port_vlan_del)
+ 		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
++	if (cpu_dp->tag_ops->vlan_tx_offload_allowed)
++		slave_dev->features |= master->features &
++				       (NETIF_F_HW_VLAN_CTAG_TX |
++					NETIF_F_HW_VLAN_STAG_TX);
++
+ 	slave_dev->hw_features |= NETIF_F_HW_TC;
+ 	slave_dev->features |= NETIF_F_LLTX;
+ 	slave_dev->ethtool_ops = &dsa_slave_ethtool_ops;

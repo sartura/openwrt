@@ -1,0 +1,45 @@
+From efc5e0647b998cb05ea11e6e599a0e11dfa9aa9c Mon Sep 17 00:00:00 2001
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Wed, 20 Oct 2021 13:34:16 +0200
+Subject: [PATCH] net: dsa: add DSA driver Qualcomm Atheros IPQ40xx built-in
+ switch
+
+Qualcomm IPQ40xx series SoC-s have a 5 port gigabit switch built-in.
+It is based on the QCA8337N switch, but lacks internal PHY-s and instead
+supports QSGMII/PSGMII external PHY-s, namely the companion PSGMII 8072/5
+PHY-s.
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ drivers/net/dsa/Kconfig  | 9 +++++++++
+ drivers/net/dsa/Makefile | 1 +
+ 2 files changed, 10 insertions(+)
+
+--- a/drivers/net/dsa/Kconfig
++++ b/drivers/net/dsa/Kconfig
+@@ -67,6 +67,15 @@ config NET_DSA_QCA8K
+ 	  This enables support for the Qualcomm Atheros QCA8K Ethernet
+ 	  switch chips.
+ 
++config NET_DSA_QCA8K_IPQ40XX
++	tristate "Qualcomm Atheros IPQ40xx built-in Ethernet switch support"
++	depends on NET_DSA
++	select NET_DSA_TAG_IPQ40XX_SH
++	select REGMAP
++	help
++	  This enables support for the Qualcomm Atheros IPQ40xx SoC built-in
++	  Ethernet switch.
++
+ config NET_DSA_REALTEK_SMI
+ 	tristate "Realtek SMI Ethernet switch family support"
+ 	depends on NET_DSA
+--- a/drivers/net/dsa/Makefile
++++ b/drivers/net/dsa/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_NET_DSA_LANTIQ_GSWIP) += la
+ obj-$(CONFIG_NET_DSA_MT7530)	+= mt7530.o
+ obj-$(CONFIG_NET_DSA_MV88E6060) += mv88e6060.o
+ obj-$(CONFIG_NET_DSA_QCA8K)	+= qca8k.o
++obj-$(CONFIG_NET_DSA_QCA8K_IPQ40XX)	+= qca8k-ipq40xx.o
+ obj-$(CONFIG_NET_DSA_REALTEK_SMI) += realtek-smi.o
+ realtek-smi-objs		:= realtek-smi-core.o rtl8366.o rtl8366rb.o
+ obj-$(CONFIG_NET_DSA_SMSC_LAN9303) += lan9303-core.o
