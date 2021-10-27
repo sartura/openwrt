@@ -1630,6 +1630,7 @@ qca8k_mmio_probe(struct platform_device *pdev)
 	if (!priv->ds)
 		return -ENOMEM;
 
+	priv->dev = &pdev->dev;
 	priv->ds->dev = &pdev->dev;
 	priv->ds->num_ports = QCA8K_NUM_PORTS;
 	priv->ds->priv = priv;
