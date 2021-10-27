@@ -348,10 +348,9 @@ qca8k_setup(struct dsa_switch *ds)
 
 	/* Make sure that port 0 is the cpu port */
 	if (!dsa_is_cpu_port(ds, 0)) {
-		pr_err("port 0 is not the CPU port\n");
+		dev_err(ds->dev, "port 0 is not the CPU port\n");
 		return -EINVAL;
 	}
-
 
 	/* Enable CPU Port */
 	qca8k_reg_set(priv, QCA8K_REG_GLOBAL_FW_CTRL0,
@@ -360,22 +359,12 @@ qca8k_setup(struct dsa_switch *ds)
 	/* Enable MIB counters */
 	qca8k_mib_init(priv);
 
-	/* Disable buggy AZ */
-	qca8k_write(priv, QCA8K_REG_EEE_CTRL, 0);
-
-	/* enable jumbo frames */
-	qca8k_rmw(priv, QCA8K_REG_MAX_FRAME_SIZE,
-		  QCA8K_MAX_FRAME_SIZE_MTU, 9018 + 8 + 2);
-
 	qca8k_write(priv, QCA8K_REG_PORT_FLOWCTRL_THRESH(0),
 		(QCA8K_PORT0_FC_THRESH_ON_DFLT << 16) |
 		QCA8K_PORT0_FC_THRESH_OFF_DFLT);
 
-	/* Enable QCA header mode on the cpu port */
+	/* Disable QCA header mode on the cpu port */
 	qca8k_write(priv, QCA8K_REG_PORT_HDR_CTRL(QCA8K_CPU_PORT), 0);
-	/*
-		    QCA8K_PORT_HDR_CTRL_ALL << QCA8K_PORT_HDR_CTRL_TX_S |
-		    QCA8K_PORT_HDR_CTRL_ALL << QCA8K_PORT_HDR_CTRL_RX_S);*/
 
 	/* Disable forwarding by default on all ports */
 	for (i = 0; i < QCA8K_NUM_PORTS; i++)
