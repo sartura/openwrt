@@ -1100,7 +1100,7 @@ ar40xx_psgmii_single_phy_testing(struct qca8k_priv *priv, int phy)
 	if (ar40xx_phytest_check_counters(priv, phy, 0x1000)) {
 		priv->phy_t_status &= (~BIT(phy));
 	} else {
-		pr_info("PHY %d single test PSGMII issue happen!\n", phy);
+		dev_info(priv->dev, "PHY %d single test PSGMII issue happen!\n", phy);
 		priv->phy_t_status |= BIT(phy);
 	}
 
@@ -1143,12 +1143,12 @@ ar40xx_psgmii_all_phy_testing(struct qca8k_priv *priv)
 			/* success */
 			priv->phy_t_status &= ~BIT(phy + 8);
 		} else {
-			pr_info("PHY%d test see issue!\n", phy);
+			dev_info(priv->dev, "PHY%d test see issue!\n", phy);
 			priv->phy_t_status |= BIT(phy + 8);
 		}
 	}
 
-	pr_debug("PHY all test 0x%x \r\n", priv->phy_t_status);
+	dev_dbg(priv->dev, "PHY all test 0x%x \r\n", priv->phy_t_status);
 }
 
 static void
@@ -1198,9 +1198,9 @@ ar40xx_psgmii_self_test(struct qca8k_priv *priv)
 	}
 
 	if (i >= AR40XX_PSGMII_CALB_NUM)
-		pr_info("PSGMII cannot recover\n");
+		dev_info(priv->dev, "PSGMII cannot recover\n");
 	else
-		pr_debug("PSGMII recovered after %d times reset\n", i);
+		dev_dbg(priv->dev, "PSGMII recovered after %d times reset\n", i);
 
 	/* configuration recover */
 	/* packet number */
