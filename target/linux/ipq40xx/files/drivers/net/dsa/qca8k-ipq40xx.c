@@ -147,8 +147,10 @@ qca8k_busy_wait(struct qca8k_priv *priv, u32 reg, u32 mask)
 {
 	u32 val;
 
-	return regmap_read_poll_timeout(priv->regmap, reg, val, val & mask,
-					0, 20000);
+	return regmap_read_poll_timeout(priv->regmap, reg, val,
+					!(val & mask),
+					QCA8K_POLL_SLEEP,
+					QCA8K_POLL_TIMEOUT);
 }
 
 static void
