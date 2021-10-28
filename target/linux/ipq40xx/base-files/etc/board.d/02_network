@@ -14,6 +14,9 @@ ipq40xx_setup_interfaces()
 	8dev,jalapeno)
 		ucidef_set_interfaces_lan_wan "lan" "wan"
 		;;
+	avm,fritzbox-4040)
+		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
+		;;
 	8dev,habanero-dvk|\
 	alfa-network,ap120c-ac|\
 	engenius,emr3500|\
@@ -57,7 +60,6 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "1:lan:4" "2:lan:3" "3:lan:2" "4:lan:1"
 		;;
-	avm,fritzbox-4040|\
 	linksys,ea6350v3|\
 	linksys,ea8300|\
 	linksys,mr8300)
