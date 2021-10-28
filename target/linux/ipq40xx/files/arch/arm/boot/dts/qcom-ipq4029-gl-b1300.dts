@@ -264,3 +264,29 @@
 	status = "okay";
 	qcom,ath10k-calibration-variant = "GL-B1300";
 };
+
+&gmac {
+        status = "okay";
+};
+
+&switch {
+        status = "okay";
+};
+
+&swport3 {
+        status = "okay";
+        label = "lan2";
+};
+
+&swport4 {
+        status = "okay";
+        label = "lan1";
+};
+
+&swport5 {
+        status = "okay";
+};
+
+&psgmii_phy {
+	status = "okay";
+};
