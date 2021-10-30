@@ -15,7 +15,8 @@ ipq40xx_setup_interfaces()
 		ucidef_set_interfaces_lan_wan "lan" "wan"
 		;;
 	zyxel,nbg6617|\
-	avm,fritzbox-4040)
+	avm,fritzbox-4040|\
+	asus,rt-ac58u)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
 		;;
 	avm,fritzbox-7530)
@@ -60,7 +61,6 @@ ipq40xx_setup_interfaces()
 	openmesh,a62)
 		ucidef_set_interfaces_lan_wan "eth1" "eth0"
 		;;
-	asus,rt-ac58u|\
 	mikrotik,hap-ac2)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
 		ucidef_add_switch "switch0" \
