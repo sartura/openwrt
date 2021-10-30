@@ -16,7 +16,8 @@ ipq40xx_setup_interfaces()
 		;;
 	zyxel,nbg6617|\
 	avm,fritzbox-4040|\
-	asus,rt-ac58u)
+	asus,rt-ac58u|\
+	linksys,ea6350v3)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
 		;;
 	avm,fritzbox-7530)
@@ -66,7 +67,6 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "1:lan:4" "2:lan:3" "3:lan:2" "4:lan:1"
 		;;
-	linksys,ea6350v3|\
 	linksys,ea8300|\
 	linksys,mr8300)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
