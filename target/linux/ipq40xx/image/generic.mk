@@ -239,6 +239,18 @@ define Device/avm_fritzrepeater-3000
 endef
 TARGET_DEVICES += avm_fritzrepeater-3000
 
+define Device/bit_one
+	$(call Device/FitImageLzma)
+	$(call Device/UbiFit)
+	DEVICE_VENDOR := Bit
+	DEVICE_MODEL := One
+	BLOCKSIZE := 128k
+	PAGESIZE := 2048
+	SOC := qcom-ipq4019
+	DEVICE_PACKAGES := ipq-wifi-8dev_habanero-dvk kmod-sfp kmod-hwmon-lm75
+endef
+TARGET_DEVICES += bit_one
+
 define Device/buffalo_wtr-m2133hp
 	$(call Device/FitImage)
 	$(call Device/UbiFit)

@@ -64,6 +64,7 @@ platform_do_upgrade() {
 	avm,fritzbox-7530 |\
 	avm,fritzrepeater-1200 |\
 	avm,fritzrepeater-3000 |\
+	bit,one|\
 	buffalo,wtr-m2133hp |\
 	cilab,meshpoint-one |\
 	edgecore,ecw5211 |\

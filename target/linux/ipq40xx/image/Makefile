@@ -13,5 +13,4 @@ define Device/Default
 endef
 
 include $(SUBTARGET).mk
-
 $(eval $(call BuildImage))
