@@ -1,0 +1,88 @@
+From ed5298c7d500abaf34ed7783969e953a1f028e5b Mon Sep 17 00:00:00 2001
+From: Loic Poulain <loic.poulain@linaro.org>
+Date: Mon, 28 Sep 2020 09:39:50 +0530
+Subject: [PATCH] bus: mhi: Remove auto-start option
+
+There is really no point having an auto-start for channels.
+This is confusing for the device drivers, some have to enable the
+channels, others don't have... and waste resources (e.g. pre allocated
+buffers) that may never be used.
+
+This is really up to the MHI device(channel) driver to manage the state
+of its channels.
+
+While at it, let's also remove the auto-start option from ath11k mhi
+controller.
+
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+[mani: clubbed ath11k change]
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/bus/mhi/core/init.c           | 9 ---------
+ drivers/bus/mhi/core/internal.h       | 1 -
+ drivers/net/wireless/ath/ath11k/mhi.c | 4 ----
+ include/linux/mhi.h                   | 2 --
+ 4 files changed, 16 deletions(-)
+
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -771,7 +771,6 @@ static int parse_ch_cfg(struct mhi_contr
+ 		mhi_chan->offload_ch = ch_cfg->offload_channel;
+ 		mhi_chan->db_cfg.reset_req = ch_cfg->doorbell_mode_switch;
+ 		mhi_chan->pre_alloc = ch_cfg->auto_queue;
+-		mhi_chan->auto_start = ch_cfg->auto_start;
+ 
+ 		/*
+ 		 * If MHI host allocates buffers, then the channel direction
+@@ -1173,11 +1172,6 @@ static int mhi_driver_probe(struct devic
+ 			goto exit_probe;
+ 
+ 		ul_chan->xfer_cb = mhi_drv->ul_xfer_cb;
+-		if (ul_chan->auto_start) {
+-			ret = mhi_prepare_channel(mhi_cntrl, ul_chan);
+-			if (ret)
+-				goto exit_probe;
+-		}
+ 	}
+ 
+ 	ret = -EINVAL;
+@@ -1211,9 +1205,6 @@ static int mhi_driver_probe(struct devic
+ 	if (ret)
+ 		goto exit_probe;
+ 
+-	if (dl_chan && dl_chan->auto_start)
+-		mhi_prepare_channel(mhi_cntrl, dl_chan);
+-
+ 	mhi_device_put(mhi_dev);
+ 
+ 	return ret;
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -563,7 +563,6 @@ struct mhi_chan {
+ 	bool configured;
+ 	bool offload_ch;
+ 	bool pre_alloc;
+-	bool auto_start;
+ 	bool wake_capable;
+ };
+ 
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -214,7 +214,6 @@ enum mhi_db_brst_mode {
+  * @offload_channel: The client manages the channel completely
+  * @doorbell_mode_switch: Channel switches to doorbell mode on M0 transition
+  * @auto_queue: Framework will automatically queue buffers for DL traffic
+- * @auto_start: Automatically start (open) this channel
+  * @wake-capable: Channel capable of waking up the system
+  */
+ struct mhi_channel_config {
+@@ -232,7 +231,6 @@ struct mhi_channel_config {
+ 	bool offload_channel;
+ 	bool doorbell_mode_switch;
+ 	bool auto_queue;
+-	bool auto_start;
+ 	bool wake_capable;
+ };
+ 

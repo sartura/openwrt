@@ -1,0 +1,41 @@
+From 6cc1716102b55497dd557e8295a3177315332f9a Mon Sep 17 00:00:00 2001
+From: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Date: Mon, 9 Nov 2020 12:47:31 -0800
+Subject: [PATCH] bus: mhi: core: Remove MHI event ring IRQ handlers when
+ powering down
+
+While powering down, the device may or may not acknowledge an MHI
+RESET issued by host for a graceful shutdown scenario and end up
+sending an incoming data packet after tasklets have been killed.
+If a rogue device sends this interrupt for a data transfer event
+ring update, it can result in a tasklet getting scheduled while a
+clean up is ongoing or has completed and cause access to freed
+memory leading to a NULL pointer exception. Remove the interrupt
+handlers for MHI event rings early on to avoid this scenario.
+
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/bus/mhi/core/pm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -520,6 +520,7 @@ static void mhi_pm_disable_transition(st
+ 	for (i = 0; i < mhi_cntrl->total_ev_rings; i++, mhi_event++) {
+ 		if (mhi_event->offload_ev)
+ 			continue;
++		free_irq(mhi_cntrl->irq[mhi_event->irq], mhi_event);
+ 		tasklet_kill(&mhi_event->task);
+ 	}
+ 
+@@ -1059,7 +1060,7 @@ void mhi_power_down(struct mhi_controlle
+ 	/* Wait for shutdown to complete */
+ 	flush_work(&mhi_cntrl->st_worker);
+ 
+-	mhi_deinit_free_irq(mhi_cntrl);
++	free_irq(mhi_cntrl->irq[0], mhi_cntrl);
+ 
+ 	if (!mhi_cntrl->pre_init) {
+ 		/* Free all allocated resources */
