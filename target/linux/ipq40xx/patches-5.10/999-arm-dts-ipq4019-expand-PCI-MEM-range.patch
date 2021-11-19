@@ -1,0 +1,27 @@
+From 4790b75d8ee07340935b57bfb0277b63b8b52b75 Mon Sep 17 00:00:00 2001
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Fri, 19 Nov 2021 22:09:39 +0100
+Subject: [PATCH] arm: dts: ipq4019: expand PCI MEM range
+
+Copy the PCI MEM range from QSDK DTSI, it moves the base as well as
+expands the MEM range to 256MB.
+
+This is required as ath11k cards require at least 16MB in case of
+QCA6391.
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -426,7 +426,7 @@
+ 			#size-cells = <2>;
+ 
+ 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000>,
+-				 <0x82000000 0 0x40300000 0x40300000 0 0x00d00000>;
++				 <0x82000000 0 0x48000000 0x48000000 0 0x10000000>;
+ 
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi";
