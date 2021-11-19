@@ -45,3 +45,11 @@ define Package/wil6210-firmware/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/wil6210.brd $(1)/lib/firmware
 endef
 $(eval $(call BuildPackage,wil6210-firmware))
+
+Package/ath11k-firmware-qca6390 = $(call Package/firmware-default,ath11k QCA6390 firmware)
+define Package/ath11k-firmware-qca6390/install
+	$(INSTALL_DIR) $(1)/lib/firmware/ath11k/QCA6390/hw2.0
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/ath11k/QCA6390/hw2.0/* \
+		$(1)/lib/firmware/ath11k/QCA6390/hw2.0
+endef
+$(eval $(call BuildPackage,ath11k-firmware-qca6390))
