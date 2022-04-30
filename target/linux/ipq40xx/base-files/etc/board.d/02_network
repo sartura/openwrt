@@ -27,6 +27,7 @@ ipq40xx_setup_interfaces()
 		ucidef_set_interfaces_lan_wan "lan" "wan"
 		;;
 	aruba,ap-303|\
+	aruba,ap-365|\
 	avm,fritzrepeater-1200|\
 	meraki,mr33|\
 	mikrotik,sxtsq-5-ac)
@@ -46,7 +47,6 @@ ipq40xx_setup_interfaces()
 	plasmacloud,pa2200)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
 		;;
-	aruba,ap-365|\
 	dlink,dap-2610 |\
 	engenius,eap1300|\
 	engenius,emd1|\
