@@ -62,7 +62,6 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "2:lan:1" "3:lan:2" "4:lan:3" "0u@eth1" "5:wan"
 		;;
-	asus,map-ac2200|\
 	edgecore,ecw5211|\
 	edgecore,oap100|\
 	google,wifi|\
@@ -109,6 +108,7 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "3:lan" "4:lan"
 		;;
+	asus,map-ac2200|\
 	compex,wpj428)
 		ucidef_set_interface_lan "lan1 lan2"
 		;;
