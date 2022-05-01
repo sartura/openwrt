@@ -109,6 +109,7 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "3:lan" "4:lan"
 		;;
+	avm,fritzrepeater-3000|\
 	compex,wpj428)
 		ucidef_set_interface_lan "lan1 lan2"
 		;;
