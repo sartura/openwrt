@@ -14,6 +14,7 @@ ipq40xx_setup_interfaces()
 	8dev,habanero-dvk|\
 	avm,fritzbox-4040|\
 	asus,rt-ac58u|\
+	compex,wpj419|\
 	linksys,ea6350v3|\
 	mikrotik,hap-ac2|\
 	mikrotik,hap-ac3|\
@@ -95,7 +96,6 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "4:lan:1" "5:lan:2"
 		;;
-	compex,wpj419|\
 	engenius,eap2200)
 		ucidef_set_interface_lan "eth0 eth1"
 		;;
