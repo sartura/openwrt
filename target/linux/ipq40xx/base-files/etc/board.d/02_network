@@ -23,6 +23,7 @@ ipq40xx_setup_interfaces()
 	8dev,jalapeno|\
 	alfa-network,ap120c-ac|\
 	cilab,meshpoint-one|\
+	devolo,magic-2-wifi-next|\
 	glinet,gl-b2200)
 		ucidef_set_interfaces_lan_wan "lan" "wan"
 		;;
@@ -111,9 +112,6 @@ ipq40xx_setup_interfaces()
 		;;
 	compex,wpj428)
 		ucidef_set_interface_lan "lan1 lan2"
-		;;
-	devolo,magic-2-wifi-next)
-		ucidef_set_interface_lan "eth0 eth1 eth2"
 		;;
 	ezviz,cs-w3-wd1200g-eup)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
