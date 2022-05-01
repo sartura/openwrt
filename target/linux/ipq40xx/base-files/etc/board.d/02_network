@@ -35,6 +35,9 @@ ipq40xx_setup_interfaces()
 	avm,fritzbox-7530)
 		ucidef_set_interface_lan "lan1 lan2 lan3 lan4"
 		;;
+	cellc,rtl30vw)
+		ucidef_set_interface_lan "lan1 lan2"
+		;;
 	glinet,gl-b1300)
 		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 		;;
@@ -103,11 +106,6 @@ ipq40xx_setup_interfaces()
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "2:lan:3" "3:lan:2" "4:lan:1"
-		;;
-	cellc,rtl30vw)
-		ucidef_set_interface_lan "eth0"
-		ucidef_add_switch "switch0" \
-			"0u@eth0" "3:lan" "4:lan"
 		;;
 	compex,wpj428)
 		ucidef_set_interface_lan "lan1 lan2"

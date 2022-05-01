@@ -386,3 +386,23 @@
 	nvmem-cells = <&precal_art_5000>;
 	qcom,ath10k-calibration-variant = "cellc,rtl30vw";
 };
+
+&gmac {
+	status = "okay";
+};
+
+&switch {
+	status = "okay";
+};
+
+&swport3 {
+	status = "okay";
+
+	label = "lan2";
+};
+
+&swport4 {
+	status = "okay";
+
+	label = "lan1";
+};
