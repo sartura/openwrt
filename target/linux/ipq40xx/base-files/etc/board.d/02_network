@@ -17,6 +17,8 @@ ipq40xx_setup_interfaces()
 	linksys,ea6350v3|\
 	mikrotik,hap-ac2|\
 	mikrotik,hap-ac3|\
+	p2w,r619ac-64m|\
+	p2w,r619ac-128m|\
 	zyxel,nbg6617)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
 		;;
@@ -74,9 +76,7 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0t@eth0" "4:lan" "5:wan"
 		;;
-	asus,rt-ac42u|\
-	p2w,r619ac-64m|\
-	p2w,r619ac-128m)
+	asus,rt-ac42u)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "1:lan:4" "2:lan:3" "3:lan:2" "4:lan:1"
