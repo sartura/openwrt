@@ -47,6 +47,10 @@
 
 		mdio@90000 {
 			status = "okay";
+
+			ethphy: ethernet-phy@0 {
+				sreg = <0x0>;
+			};
 		};
 
 		counter@4a1000 {
@@ -241,6 +245,24 @@
 			reg = <0x00010000 0 0 0 0>;
 		};
 	};
+};
+
+&gmac {
+	status = "okay";
+};
+
+&switch {
+	status = "okay";
+
+	/delete-property/ psgmii-ethphy;
+};
+
+&swport5 {
+	status = "okay";
+
+	label = "lan";
+	phy-handle = <&ethphy>;
+	phy-mode = "rgmii-id";
 };
 
 &ethphy1 {
