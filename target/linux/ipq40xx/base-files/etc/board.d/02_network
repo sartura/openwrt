@@ -64,7 +64,6 @@ ipq40xx_setup_interfaces()
 		;;
 	asus,map-ac2200|\
 	edgecore,ecw5211|\
-	edgecore,oap100|\
 	google,wifi|\
 	openmesh,a42|\
 	openmesh,a62)
@@ -109,7 +108,8 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "3:lan" "4:lan"
 		;;
-	compex,wpj428)
+	compex,wpj428|\
+	edgecore,oap100)
 		ucidef_set_interface_lan "lan1 lan2"
 		;;
 	devolo,magic-2-wifi-next)

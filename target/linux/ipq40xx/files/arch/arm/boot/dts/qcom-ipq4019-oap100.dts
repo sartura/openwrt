@@ -337,3 +337,21 @@
 &usb2_hs_phy {
 	status = "okay";
 };
+
+&gmac {
+	status = "okay";
+};
+
+&switch {
+	status = "okay";
+};
+
+&swport4 {
+	status = "okay";
+	label = "lan1";
+};
+
+&swport5 {
+	status = "okay";
+	label = "lan2";
+};
