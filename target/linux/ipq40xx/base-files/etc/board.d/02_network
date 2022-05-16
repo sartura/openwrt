@@ -22,6 +22,7 @@ ipq40xx_setup_interfaces()
 		;;
 	8dev,jalapeno|\
 	alfa-network,ap120c-ac|\
+	asus,map-ac2200|\
 	cilab,meshpoint-one|\
 	glinet,gl-b2200)
 		ucidef_set_interfaces_lan_wan "lan" "wan"
@@ -62,7 +63,6 @@ ipq40xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0u@eth0" "2:lan:1" "3:lan:2" "4:lan:3" "0u@eth1" "5:wan"
 		;;
-	asus,map-ac2200|\
 	edgecore,ecw5211|\
 	edgecore,oap100|\
 	google,wifi|\
