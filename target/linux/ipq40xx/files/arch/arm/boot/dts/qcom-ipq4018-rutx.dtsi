@@ -275,3 +275,31 @@
 	nvmem-cells = <&precal_art_5000>, <&macaddr_config_0>;
 	mac-address-increment = <3>;
 };
+
+&gmac {
+	status = "okay";
+};
+
+&switch {
+	status = "okay";
+};
+
+&swport2 {
+	status = "okay";
+	label = "lan1";
+};
+
+&swport3 {
+	status = "okay";
+	label = "lan2";
+};
+
+&swport4 {
+	status = "okay";
+	label = "lan3";
+};
+
+&swport5 {
+	status = "okay";
+	label = "wan";
+};
