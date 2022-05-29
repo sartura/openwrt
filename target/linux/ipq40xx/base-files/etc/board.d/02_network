@@ -29,7 +29,8 @@ ipq40xx_setup_interfaces()
 	asus,map-ac2200|\
 	cilab,meshpoint-one|\
 	glinet,gl-b2200|\
-	mikrotik,cap-ac)
+	mikrotik,cap-ac|\
+	netgear,wac510)
 		ucidef_set_interfaces_lan_wan "lan" "wan"
 		;;
 	aruba,ap-303|\
@@ -51,7 +52,6 @@ ipq40xx_setup_interfaces()
 	engenius,emr3500|\
 	engenius,ens620ext|\
 	luma,wrtq-329acn|\
-	netgear,wac510|\
 	plasmacloud,pa1200|\
 	plasmacloud,pa2200)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
