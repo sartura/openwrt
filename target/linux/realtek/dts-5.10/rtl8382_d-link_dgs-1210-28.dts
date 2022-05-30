@@ -20,6 +20,20 @@
 			reg = <0x4c>;
 		};
 	};
+
+	sfp27_i2c: sfp27-i2c-gpio {
+		compatible = "i2c-gpio";
+		sda-gpios = <&rtl8231 22 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN )>;
+		scl-gpios = <&rtl8231 23 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN )>;
+	};
+
+	sfp27: sfp-27 {
+		compatible = "sff,sfp";
+		i2c-bus = <&sfp27_i2c>;
+		los-gpio = <&rtl8231 25 GPIO_ACTIVE_HIGH>;
+		mod-def0-gpio = <&rtl8231 24 GPIO_ACTIVE_LOW>;
+		tx-disable-gpio = <&rtl8231 5 GPIO_ACTIVE_HIGH>;
+	};
 };
 
 &ethernet0 {
