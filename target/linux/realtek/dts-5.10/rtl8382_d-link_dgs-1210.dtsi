@@ -39,6 +39,35 @@
 		gpios = <&rtl8231 34 GPIO_ACTIVE_LOW>;
 		open-source;
 	};
+
+	/* These two SFP ports are present on the whole DGS series */
+	sfp0_i2c: sfp0-i2c-gpio {
+		compatible = "i2c-gpio";
+		sda-gpios = <&rtl8231 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+		scl-gpios = <&rtl8231 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	};
+
+	sfp0: sfp0 {
+		compatible = "sff,sfp";
+		i2c-bus = <&sfp0_i2c>;
+		los-gpio = <&rtl8231 9 GPIO_ACTIVE_HIGH>;
+		mod-def0-gpio = <&rtl8231 8 GPIO_ACTIVE_LOW>;
+		tx-disable-gpio = <&rtl8231 11 GPIO_ACTIVE_HIGH>;
+	};
+
+	sfp1_i2c: sfp1-i2c-gpio {
+		compatible = "i2c-gpio";
+		sda-gpios = <&rtl8231 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+		scl-gpios = <&rtl8231 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	};
+
+	sfp1: sfp1 {
+		compatible = "sff,sfp";
+		i2c-bus = <&sfp1_i2c>;
+		los-gpio = <&rtl8231 4 GPIO_ACTIVE_HIGH>;
+		mod-def0-gpio = <&rtl8231 3 GPIO_ACTIVE_LOW>;
+		tx-disable-gpio = <&rtl8231 12 GPIO_ACTIVE_HIGH>;
+ 	};
 };
 
 &gpio0 {
