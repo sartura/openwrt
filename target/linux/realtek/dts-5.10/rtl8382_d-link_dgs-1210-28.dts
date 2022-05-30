@@ -5,6 +5,21 @@
 / {
 	compatible = "d-link,dgs-1210-28", "realtek,rtl838x-soc";
 	model = "D-Link DGS-1210-28";
+
+	fan-i2c-gpio {
+		compatible = "i2c-gpio";
+		sda-gpios = <&rtl8231 32 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN )>;
+		scl-gpios = <&rtl8231 31 GPIO_ACTIVE_HIGH>;
+		i2c-gpio,scl-output-only;
+		i2c-gpio,scl-open-drain;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		fan@4c {
+			compatible = "national,lm63";
+			reg = <0x4c>;
+		};
+	};
 };
 
 &ethernet0 {
