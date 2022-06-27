@@ -1269,6 +1269,8 @@ static int ipqess_axi_probe(struct platform_device *pdev)
 	if (err)
 		goto err_out;
 
+	dev_set_threaded(netdev, true);
+
 	for (i = 0; i < IPQESS_NETDEV_QUEUES; i++) {
 		int qid;
 
