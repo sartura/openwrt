@@ -48,7 +48,8 @@ ipq40xx_setup_interfaces()
 	cellc,rtl30vw)
 		ucidef_set_interface_lan "lan1 lan2"
 		;;
-	glinet,gl-b1300)
+	glinet,gl-b1300|\
+	glinet,gl-s1300)
 		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 		;;
 	compex,wpj428)

@@ -205,6 +205,18 @@
 				precal_art_5000: precal@5000 {
 					reg = <0x5000 0x2f20>;
 				};
+
+				macaddr_art_e010: mac-address@e010 {
+					reg = <0xe010 0x6>;
+				};
+
+				macaddr_art_e018: mac-address@e018 {
+					reg = <0xe018 0x6>;
+				};
+
+				macaddr_art_e020: mac-address@e020 {
+					reg = <0xe020 0x6>;
+				};
 			};
 
 			firmware@180000 {
@@ -276,18 +288,26 @@
 
 &swport3 {
 	status = "okay";
-
 	label = "lan2";
+
+	nvmem-cells = <&macaddr_art_e020>;
+	nvmem-cell-names = "mac-address";
 };
 
 &swport4 {
 	status = "okay";
-
 	label = "lan1";
+
+	nvmem-cells = <&macaddr_art_e018>;
+	nvmem-cell-names = "mac-address";
 };
 
 &swport5 {
 	status = "okay";
+	label = "wan";
+
+	nvmem-cells = <&macaddr_art_e010>;
+	nvmem-cell-names = "mac-address";
 };
 
 &wifi0 {
