@@ -344,6 +344,9 @@
 
 &gmac {
 	status = "okay";
+	nvmem-cells = <&macaddr_art_5006>;
+	nvmem-cell-names = "mac-address";
+	mac-address-increment = <1>;
 };
 
 &switch {
