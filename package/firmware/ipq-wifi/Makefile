@@ -5,10 +5,10 @@ PKG_NAME:=ipq-wifi
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL=$(PROJECT_GIT)/project/firmware/qca-wireless.git
-PKG_SOURCE_DATE:=2023-03-20
-PKG_SOURCE_VERSION:=f9cece02724b8ca2c1a166a46f0afa89e632d431
-PKG_MIRROR_HASH:=89c20798c7ec83114aa69467f2467fe32cbb74ebeca277c60a033af960ca6c04
+PKG_SOURCE_URL=https://github.com/sartura/firmware_qca-wireless.git
+PKG_SOURCE_DATE:=2023-03-222
+PKG_SOURCE_VERSION:=ea962cae2294b3e892d0a974299a7caa2cf7a869
+PKG_MIRROR_HASH:=b40d63c8fa26c7d89f3e28ac0e242b357d6c8fbc077699196a5652e1a4c92e5e
 
 PKG_FLAGS:=nonshared
 
@@ -38,6 +38,7 @@ ALLWIFIBOARDS:= \
 	edgecore_ecw5410 \
 	edgecore_oap100 \
 	edimax_cax1800 \
+	emplus_wap551 \
 	extreme-networks_ws-ap3915i \
 	glinet_gl-a1300 \
 	glinet_gl-ap1300 \
@@ -143,6 +144,7 @@ $(eval $(call generate-ipq-wifi-package,edgecore_eap102,Edgecore EAP102))
 $(eval $(call generate-ipq-wifi-package,edgecore_ecw5410,Edgecore ECW5410))
 $(eval $(call generate-ipq-wifi-package,edgecore_oap100,Edgecore OAP100))
 $(eval $(call generate-ipq-wifi-package,edimax_cax1800,Edimax CAX1800))
+$(eval $(call generate-ipq-wifi-package,emplus_wap551,Emplus WAP551))
 $(eval $(call generate-ipq-wifi-package,extreme-networks_ws-ap3915i,Edgecore OAP100))
 $(eval $(call generate-ipq-wifi-package,glinet_gl-a1300,GL.iNet GL-A1300))
 $(eval $(call generate-ipq-wifi-package,glinet_gl-ap1300,GL.iNet GL-AP1300))

@@ -65,6 +65,9 @@ ipq40xx_setup_interfaces()
 	compex,wpj428)
 		ucidef_set_interface_lan "lan1 lan2"
 		;;
+	emplus,wap551)
+		ucidef_set_interfaces_lan_wan "ethernet2 ethernet3" "ethernet1"
+		;;
 	linksys,whw01)
 		ucidef_set_interface_lan "eth1 eth2"
 		;;

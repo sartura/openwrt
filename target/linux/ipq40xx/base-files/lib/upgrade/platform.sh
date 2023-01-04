@@ -80,6 +80,24 @@ zyxel_do_upgrade() {
 	fi
 }
 
+emplus_do_upgrade() {
+	local tar_file="$1"
+	local kernel_mtd=$(find_mtd_part "0:HLOS")
+	kernel_mtd="${kernel_mtd/block/}"
+	[ -n "$kernel_mtd" ] || return
+
+	local board_dir=$(tar tf $tar_file | grep -m 1 '^sysupgrade-.*/$')
+	board_dir=${board_dir%/}
+
+	tar Oxf $tar_file ${board_dir}/kernel | mtd write - "$kernel_mtd"
+
+	if [ -n "$UPGRADE_BACKUP" ]; then
+		tar Oxf $tar_file ${board_dir}/root | mtd -j "$UPGRADE_BACKUP" write - rootfs
+	else
+		tar Oxf $tar_file ${board_dir}/root | mtd write - rootfs
+	fi
+}
+
 platform_do_upgrade_mikrotik_nand() {
 	local fw_mtd=$(find_mtd_part kernel)
 	fw_mtd="${fw_mtd/block/}"
@@ -122,6 +140,9 @@ platform_do_upgrade() {
 	qxwlan,e2600ac-c2 |\
 	wallys,dr40x9)
 		nand_do_upgrade "$1"
+		;;
+	emplus,wap551)
+		emplus_do_upgrade "$1"
 		;;
 	glinet,gl-b2200)
 		CI_KERNPART="0:HLOS"

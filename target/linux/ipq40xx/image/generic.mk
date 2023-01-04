@@ -450,6 +450,16 @@ endef
 # Missing DSA Setup
 #TARGET_DEVICES += edgecore_oap100
 
+define Device/emplus_wap551
+	$(call Device/FitImage)
+	DEVICE_VENDOR := Emplus
+	DEVICE_MODEL := WAP551
+	SOC := qcom-ipq4018
+	DEVICE_DTS_CONFIG := config@ap.dk01.1-c1
+	DEVICE_PACKAGES := ipq-wifi-emplus_wap551
+endef
+TARGET_DEVICES += emplus_wap551
+
 define Device/engenius_eap1300
 	$(call Device/FitImage)
 	DEVICE_VENDOR := EnGenius
