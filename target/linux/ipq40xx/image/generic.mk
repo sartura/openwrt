@@ -456,7 +456,7 @@ define Device/emplus_wap551
 	DEVICE_MODEL := WAP551
 	SOC := qcom-ipq4018
 	DEVICE_DTS_CONFIG := config@ap.dk01.1-c1
-	DEVICE_PACKAGES := ipq-wifi-emplus_wap551
+	DEVICE_PACKAGES := ipq-wifi-emplus_wap551 kmod-ramoops
 endef
 TARGET_DEVICES += emplus_wap551
 
