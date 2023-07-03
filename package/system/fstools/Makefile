@@ -34,6 +34,10 @@ include $(INCLUDE_DIR)/cmake.mk
 CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_UBIFS_EXTROOT),-DCMAKE_UBIFS_EXTROOT=y)
 CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_OVL_MOUNT_FULL_ACCESS_TIME),-DCMAKE_OVL_MOUNT_FULL_ACCESS_TIME=y)
 CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_OVL_MOUNT_COMPRESS_ZLIB),-DCMAKE_OVL_MOUNT_COMPRESS_ZLIB=y)
+CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_LZO),-DCMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZO=y)
+CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_LZO_RLE),-DCMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZO_RLE=y)
+CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_LZ4),-DCMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZ4=y)
+CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_ZSTD),-DCMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_ZSTD=y)
 
 define Package/fstools
   SECTION:=base
@@ -65,6 +69,41 @@ define Package/fstools/config
 		default n
 		help
 			This option enables the compression using zlib on the storage device.
+
+	choice
+		prompt "F2FS rootfs compression"
+		depends on PACKAGE_fstools
+		default FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_NONE
+		help
+			Compression type to be used on mounting the F2FS backed rootfs.
+
+		config FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_NONE
+			bool "No F2FS rootfs compression"
+
+		config FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_LZO
+			bool "Compress F2FS rootfs using LZO"
+			help
+				This option enables LZO compression on F2FS provided rootfs in order to reduce the number of writes
+				and increase the flash life.
+
+		config FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_LZO_RLE
+			bool "Compress F2FS rootfs using LZO-RLE"
+			help
+				This option enables LZO-RLE compression on F2FS provided rootfs in order to reduce the number of writes
+				and increase the flash life.
+
+		config FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_LZ4
+			bool "Compress F2FS rootfs using LZ4"
+			help
+				This option enables LZ4 compression on F2FS provided rootfs in order to reduce the number of writes
+				and increase the flash life.
+
+		config FSTOOLS_F2FS_ROOTFS_MOUNT_COMPRESS_ZSTD
+			bool "Compress F2FS rootfs using ZSTD"
+			help
+				This option enables ZSTD compression on F2FS provided rootfs in order to reduce the number of writes
+				and increase the flash life.
+	endchoice
 endef
 
 define Package/snapshot-tool

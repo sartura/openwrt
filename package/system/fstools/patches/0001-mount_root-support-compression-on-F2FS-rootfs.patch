@@ -1,0 +1,68 @@
+From 7f9042e218a6ec68edff930eaadd0251149c4ca5 Mon Sep 17 00:00:00 2001
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Mon, 3 Jul 2023 13:56:43 +0200
+Subject: [PATCH] mount_root: support compression on F2FS rootfs
+
+Some devices dont utilize overlay but rather use F2FS backed RW rootfs
+on eMMC and like.
+
+F2FS does not provide space savings with compression but rather uses
+compression to reduce writes and offer some small performance increases.
+
+So, in order to prolong the eMMC life lets add a compile time option to
+enable F2FS compression on rootfs mount.
+
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ CMakeLists.txt | 16 ++++++++++++++++
+ mount_root.c   | 14 +++++++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,6 +66,22 @@ IF(DEFINED CMAKE_OVL_MOUNT_FULL_ACCESS_T
+ 	ADD_DEFINITIONS(-DOVL_MOUNT_FULL_ACCESS_TIME)
+ ENDIF(DEFINED CMAKE_OVL_MOUNT_FULL_ACCESS_TIME)
+ 
++IF(DEFINED CMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZO)
++	ADD_DEFINITIONS(-DF2FS_ROOTFS_MOUNT_COMPRESS_LZO)
++ENDIF(DEFINED CMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZO)
++
++IF(DEFINED CMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZO_RLE)
++	ADD_DEFINITIONS(-DF2FS_ROOTFS_MOUNT_COMPRESS_LZO_RLE)
++ENDIF(DEFINED CMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZO_RLE)
++
++IF(DEFINED CMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZ4)
++	ADD_DEFINITIONS(-DF2FS_ROOTFS_MOUNT_COMPRESS_LZ4)
++ENDIF(DEFINED CMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_LZ4)
++
++IF(DEFINED CMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_ZSTD)
++	ADD_DEFINITIONS(-DF2FS_ROOTFS_MOUNT_COMPRESS_ZSTD)
++ENDIF(DEFINED CMAKE_F2FS_ROOTFS_MOUNT_COMPRESS_ZSTD)
++
+ ADD_EXECUTABLE(mount_root mount_root.c)
+ TARGET_LINK_LIBRARIES(mount_root fstools)
+ INSTALL(TARGETS mount_root RUNTIME DESTINATION sbin)
+--- a/mount_root.c
++++ b/mount_root.c
+@@ -41,7 +41,19 @@ start(int argc, char *argv[1])
+ 		root = volume_find("rootfs");
+ 		volume_init(root);
+ 		ULOG_NOTE("mounting /dev/root\n");
+-		mount("/dev/root", "/", NULL, MS_NOATIME | MS_REMOUNT, 0);
++		mount("/dev/root", "/", NULL, MS_NOATIME | MS_REMOUNT,
++#ifdef F2FS_ROOTFS_MOUNT_COMPRESS_LZO
++		      "compress_algorithm=lzo"
++#elif defined F2FS_ROOTFS_MOUNT_COMPRESS_LZO_RLE
++		      "compress_algorithm=lzo-rle"
++#elif defined F2FS_ROOTFS_MOUNT_COMPRESS_LZ4
++		      "compress_algorithm=lz4"
++#elif defined F2FS_ROOTFS_MOUNT_COMPRESS_ZSTD
++		      "compress_algorithm=zstd"
++#else
++		      0
++#endif
++		      );
+ 	}
+ 
+ 	/* Check for extroot config in rootfs before even trying rootfs_data */
