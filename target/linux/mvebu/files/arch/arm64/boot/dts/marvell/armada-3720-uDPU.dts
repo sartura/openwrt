@@ -28,12 +28,9 @@
 
 &i2c0 {
 	status = "okay";
-	pinctrl-names = "default", "recovery";
+	pinctrl-names = "default";
 	pinctrl-0 = <&i2c1_pins>;
-	pinctrl-1 = <&i2c1_recovery_pins>;
 	/delete-property/mrvl,i2c-fast-mode;
-	scl-gpios = <&gpionb 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-	sda-gpios = <&gpionb 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 };
 
 &eth0 {

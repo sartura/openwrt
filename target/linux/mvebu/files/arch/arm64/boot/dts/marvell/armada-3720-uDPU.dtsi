@@ -122,12 +122,9 @@
 
 &i2c1 {
 	status = "okay";
-	pinctrl-names = "default", "recovery";
+	pinctrl-names = "default";
 	pinctrl-0 = <&i2c2_pins>;
-	pinctrl-1 = <&i2c2_recovery_pins>;
 	/delete-property/mrvl,i2c-fast-mode;
-	scl-gpios = <&gpionb 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-	sda-gpios = <&gpionb 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 
 	temp-sensor@48 {
 		compatible = "ti,tmp75c";
