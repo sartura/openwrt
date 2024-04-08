@@ -25,6 +25,34 @@ udpu_part_prep() {
 	fi
 }
 
+udpu_f2fs_compression_migration() {
+	emmc_shortdev="$(echo ${emmc_dev} | cut -d '/' -f 3)"
+
+	grep -woq /dev/root /proc/mounts && umount /
+	mkdir -p /tmp/rootpart
+	mount ${emmc_dev}p3 /tmp/rootpart
+
+	if grep -q "unsupported" /sys/fs/f2fs/${emmc_shortdev}p3/feature_list/compression; then
+		printf "Formating /root partition to enable compression, this may take a while..\n"
+		udpu_part_prep ${emmc_dev}p3
+		mkfs.f2fs -q -l rootfs -O extra_attr,compression ${emmc_dev}p3 && printf "/root partition reformated\n"
+	else
+		udpu_part_prep ${emmc_dev}p3
+	fi
+
+	grep -woq /misc /proc/mounts && umount /misc
+	mkdir -p /tmp/misc
+	mount ${emmc_dev}p4 /tmp/misc
+
+	if grep -q "unsupported" /sys/fs/f2fs/${emmc_shortdev}p4/feature_list/compression; then
+		printf "Formating /misc partition to enable compression, this may take a while..\n"
+		udpu_part_prep ${emmc_dev}p4
+		mkfs.f2fs -q -l misc -O extra_attr,compression ${emmc_dev}p4 && printf "/misc partition reformated\n"
+	else
+		udpu_part_prep ${emmc_dev}p4
+	fi
+}
+
 udpu_do_part_check() {
 	local emmc_parts="1 2 3 4"
 	local part_valid="1"
@@ -111,6 +139,9 @@ udpu_do_regular_upgrade() {
 
 platform_do_upgrade_uDPU() {
 	udpu_check_emmc
+
+	# Check if F2FS compression is enabled and reformat if not
+	udpu_f2fs_compression_migration
 
 	# Prepare and extract firmware on /misc partition
 	udpu_do_misc_prep
